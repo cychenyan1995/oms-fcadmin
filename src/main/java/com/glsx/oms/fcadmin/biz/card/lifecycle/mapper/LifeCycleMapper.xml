@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.lifecycle.mapper.LifeCycleMapper">
+	<select id="selectList"
+		resultType="com.glsx.oms.fcadmin.biz.card.lifecycle.model.LifeCycle"
+		parameterType="com.glsx.oms.fcadmin.biz.card.lifecycle.model.LifeCycle">
+		SELECT
+		card.card_id cardId,
+		card.card_no cardNo,
+		card.iccid iccid,
+		card.imsi imsi,
+		card.status status,
+		card.card_type cardType,
+		DATE_FORMAT(card.delivery_time,'%Y-%m-%d') deliveryTime,
+		op.op_id opId,
+		op.op_name opName
+		FROM
+		flowmgn_flowcard card
+		LEFT JOIN flowmgn_op op ON card.op_id = op.op_id
+		WHERE card.out_stock_time is null AND op.owned = 3
+		<if test="queryText != null and queryText != '' and queryText != '已启用高级搜索'">
+			and (card.card_no = #{queryText} or card.iccid = #{queryText}
+			or card.imsi = #{queryText})
+		</if>
+		<if test="iccid != null">
+			and card.iccid like '%${iccid}%'
+		</if>
+		<if test="imsi != null">
+			and card.imsi like '%${imsi}%'
+		</if>
+		<if test="cardNo != null">
+			and card.card_no like '%${cardNo}%'
+		</if>
+		<if test="opId != null">
+			and card.op_id=#{opId}
+		</if>
+		<if test="deliveryStarttime != null and deliveryEndtime != null">
+			and card.delivery_time between #{deliveryStarttime} and
+			#{deliveryEndtime}
+		</if>
+		<if test="cardType != null">
+			and card.card_type=#{cardType}
+		</if>
+		<if test="status != null">
+			and card.status=#{status}
+		</if>
+			ORDER BY card.in_stock_time desc
+	</select>
+	
+	<insert id="batchCreate" useGeneratedKeys="true" parameterType="java.util.List">
+		insert into flowmgn_stock_card
+		(iccid,sp_id,sp_code,package_code,whitepk_code,order_no,op_key,create_time)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.iccid},#{item.spId},#{item.spCode},#{item.packageCode},#{item.whitePkCode},#{item.orderNo},#{item.opKey},NOW())
+		</foreach>
+	</insert>
+	
+	<select id="selectStockListByKey"
+		resultType="com.glsx.oms.fcadmin.biz.card.lifecycle.model.StockCardImport"
+		parameterType="java.lang.String">
+		SELECT
+		card.iccid iccid,
+		card.sp_id spId,
+		card.sp_code spCode,
+		card.package_code packageCode,
+		card.whitepk_code whitePkCode,
+		card.order_no orderNo,
+		card.op_key opKey
+		FROM
+		flowmgn_stock_card card
+		WHERE card.op_key = #{opKey}
+	</select>
+	
+	<delete id="deleteStockByKey" parameterType="java.lang.String">
+		delete from flowmgn_stock_card where op_key = #{opKey}
+	</delete>
+	
+</mapper>

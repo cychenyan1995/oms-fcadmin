@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.recovery.recycle.mapper.RecycleRecordMapper">
+	
+	<select id="getAll"
+		resultType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleRecord"
+		parameterType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleRecordQuery">
+	select
+	   recycle_record_id recycleRecordId, 
+       iccid iccid,
+       imsi imsi,
+       card_no cardNo,
+       (case when op_name=1 then '移动'
+             when op_name=2 then '电信'
+             when op_name=3 then '联通'       
+       else '' end) opName,
+       (case when source=1 then '开放平台' 
+            when source=2 then '流量管理平台'
+       else '' end) source, 
+       sp_name spName,
+       recycle_reason recycleReason,
+       date_format(request_time,'%Y-%m-%d %H:%i:%s') requestTime,
+       recycle_status recycleStatus,
+       IFNULL(fail_reason,'') failReason,
+       date_format(recycle_time,'%Y-%m-%d %H:%i:%s') recycleTime,
+       contactor_name contactorName,
+       contactor_tel contactorTel
+  from flowmgn_card_recycle_record
+  where 1=1
+  <if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">
+      and (card_no =#{keyWork} or iccid =#{keyWork} or imsi =#{keyWork})
+  </if>
+  <if test="iccid != null">
+      and iccid like '%${iccid}%'
+  </if>	
+  <if test="cardNo != null">
+      and card_no like '%${cardNo}%'
+  </if>
+  <if test="imsi != null">
+      and imsi like '%${imsi}%'
+  </if>
+  <if test="opName != null">
+      and op_name=#{opName}
+  </if>
+  <if test="recycleStatus != null">
+      and recycle_status=#{recycleStatus}
+  </if>
+  <if test="requestStartTime != null and requestEndTime != null">
+      and request_time between #{requestStartTime} and #{requestEndTime}
+  </if>
+  <if test="recycleStartTime != null and recycleEndTime != null">
+      and recycle_time between #{recycleStartTime} and #{recycleEndTime}
+  </if>
+  <if test="source != null">
+      and source=#{source}
+  </if>
+  <if test="spName != null">
+      and sp_name=#{spName}
+  </if>
+  order by update_time desc
+  </select>
+  
+  
+  <select id="getRecyleInfo" resultType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleQuery"
+		parameterType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleQuery">
+  select
+       record.recycle_record_id recycleRecordId, 
+       record.iccid iccid,
+       record.imsi imsi,
+       record.card_no cardNo,
+       (case when record.op_name=1 then '移动'
+             when record.op_name=2 then '电信'
+             when record.op_name=3 then '联通'
+       else '' end) opName,
+       (case when record.source=1 then '开放平台' 
+            when record.source=2 then '流量管理平台'
+       else '' end) source, 
+       record.sp_name spName,
+       record.recycle_reason recycleReason,
+       record.request_time requestTime,
+       (case when card.status=0 then '可测试'
+             when card.status=1 then '库存卡'
+             when card.status=2 then ''
+             when card.status=3 then '可激活'
+             when card.status=4 then '已激活'
+             when card.status=5 then '已停卡'
+             when card.status=6 then '已销卡'
+       else '' end
+       ) cardStatus,
+       (case when card.package_status=0 then '库存'
+             when card.package_status=1 then '已激活'
+             when card.package_status=2 then '已过期'
+       else '' end
+       ) packageStatus,
+       date_format(card.package_begintime,'%Y-%m-%d %H:%i:%s') packageBegintime,
+       date_format(card.package_endtime,'%Y-%m-%d %H:%i:%s') packageEndtime,
+       account.remain_totalflow remainTotalflow
+  from flowmgn_card_recycle_record record,flowmgn_flowcard card,flowmgn_flowaccount account,flowmgn_sp sp
+  where record.card_no=card.card_no and card.card_id=account.card_id and card.sp_id=sp.sp_id 
+  and recycle_record_id=#{recycleRecordId}
+  </select>
+  
+  
+    <select id="getRecyleCard" resultType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleQuery"
+		parameterType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleQuery">
+    select 
+       card.iccid iccid,
+       card.imsi imsi,
+       card.card_no cardNo,
+       (case when op.owned=1 then '移动'
+             when op.owned=2 then '电信'
+             when op.owned=3 then '联通'
+       else '' end) opName,
+       CONCAT(sp.sp_code,"/",sp.sp_name) spName,
+       (case when card.status=0 then '可测试'
+             when card.status=1 then '库存卡'
+             when card.status=2 then ''
+             when card.status=3 then '可激活'
+             when card.status=4 then '已激活'
+             when card.status=5 then '已停卡'
+             when card.status=6 then '已销卡'
+       else '' end
+       ) cardStatus,
+       (case when card.package_status=0 then '库存'
+             when card.package_status=1 then '已激活'
+             when card.package_status=2 then '已过期'
+       else '' end
+       ) packageStatus,
+       account.totalflow totalflow,
+       account.remain_totalflow remainTotalflow,
+       account.is_unlimit_flow isUnlimitFlow,
+       date_format(card.package_begintime,'%Y-%m-%d %H:%i:%s') packageBegintime,
+       date_format(card.package_endtime,'%Y-%m-%d %H:%i:%s') packageEndtime
+  from flowmgn_flowcard card 
+  left join flowmgn_flowaccount account on card.card_id=account.card_id
+  join flowmgn_op op on card.op_id=op.op_id 
+  left join flowmgn_sp sp on card.sp_id=sp.sp_id
+  where 1=1
+  <if test="iccid != null">
+      and card.iccid = #{iccid}
+  </if>	
+  <if test="cardNo != null">
+      and card.card_no = #{cardNo}
+  </if>
+  <if test="imsi != null">
+      and card.imsi = #{imsi}
+  </if>
+  </select>
+  
+  
+  
+  
+  <update id="recyclingOp" parameterType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleQuery">
+     update flowmgn_card_recycle_record 
+     set 
+     recycle_status=#{recycleStatus},
+     recycle_time=now(),
+     update_time=now()
+     <if test="failReason !=null or failReason !=''">
+       ,fail_reason=#{failReason}
+     </if> 
+     where recycle_record_id=#{recycleRecordId}
+  </update>
+  
+  
+  <insert id="addRecycleRecord" useGeneratedKeys="true" keyProperty="recycleRecordId" parameterType="com.glsx.oms.fcadmin.biz.recovery.recycle.model.RecycleRecord">
+	insert into flowmgn_card_recycle_record 
+    (iccid,
+     imsi,
+     card_no,
+     op_name,
+     source,
+     sp_name,
+     recycle_reason,
+     request_time,
+     recycle_status,
+     contactor_name,
+     contactor_tel,
+     create_time,
+     update_time)
+    values (
+     #{iccid},
+     #{imsi},
+     #{cardNo},
+     #{opName},
+     #{source},
+     #{spName},
+     #{recycleReason},
+     now(),
+     #{recycleStatus},
+     #{contactorName},
+     #{contactorTel},
+     now(),
+     now()
+    );
+	</insert>
+  
+  
+</mapper>

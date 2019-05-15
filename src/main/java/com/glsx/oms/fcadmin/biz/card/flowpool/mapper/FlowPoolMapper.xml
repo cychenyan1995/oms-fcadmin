@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.flowpool.mapper.FlowPoolMapper">
+
+	<select id="selectByPageNumSize" resultType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPool"
+		parameterType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPool">
+		 SELECT
+		    DISTINCT(pool.flowpool_id) flowpoolId,
+			pool.flowpool_name flowpoolName,
+			op.op_name opName,
+			(select group_concat(plan1.postage_name SEPARATOR ';') from flowmgn_flowpool_postage postage1 
+    			LEFT JOIN flowmgn_op_postageplan plan1 ON postage1.postage_id = plan1.postage_id  
+    			where postage1.flowpool_id=pool.flowpool_id) postageName,
+			(select sum(currmonth_totalflow) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) currmonthTotalflow,
+			(select sum(currmonth_usedflow) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) currmonthUsedflow,
+			(select sum(currmonth_remainflow) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) currmonthRemainflow,
+			(select sum(card_total) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) cardTotal,
+			(select sum(notopen_card) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) notopenCard,
+			(select sum(open_card) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) openCard,
+			(select sum(cancel_card) from flowmgn_flowpool_monthflow where flowpool_id = pool.flowpool_id) cancelCard,
+			DATE_FORMAT(pool.create_time,'%Y-%m-%d %H:%i:%s') createTime 
+		FROM flowmgn_flowpool pool
+		LEFT JOIN flowmgn_flowpool_postage postage ON pool.flowpool_id = postage.flowpool_id
+		LEFT JOIN flowmgn_op_postageplan plan ON postage.postage_id = plan.postage_id 
+		LEFT JOIN flowmgn_op op ON pool.op_id = op.op_id 
+		WHERE op.owned = 3
+		GROUP BY pool.flowpool_id
+		ORDER BY pool.create_time desc
+	</select>
+	
+	<insert id="saveFlowPool" useGeneratedKeys="true" keyProperty="flowpoolId"
+		parameterType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPool">
+		insert into flowmgn_flowpool
+		(flowpool_name,op_id,remark,create_time,update_time,last_operator_id,last_operator_name)
+		values (#{flowpoolName},#{opId},#{remark},NOW(),NOW(),#{lastOperatorId},#{lastOperatorName})
+	</insert>
+	
+	<insert id="batchCreate" useGeneratedKeys="true" parameterType="java.util.List">
+		insert into flowmgn_flowpool_postage
+		(flowpool_id,postage_id,create_time,update_time,last_operator_id,last_operator_name)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.flowpoolId},#{item.postageId},NOW(),NOW(),#{item.lastOperatorId},#{item.lastOperatorName})
+		</foreach>
+	</insert>
+	
+	<select id="selectByName" resultType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPool"
+		parameterType="java.lang.String">
+		SELECT
+		    pool.flowpool_id flowpoolId,
+			pool.flowpool_name flowpoolName 
+		FROM flowmgn_flowpool pool
+		WHERE pool.flowpool_name =#{flowpoolName} 
+
+	</select>
+
+</mapper>

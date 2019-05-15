@@ -1,0 +1,381 @@
+.table-fixed {
+	table-layout: fixed;
+}
+
+.advance-wrapper {
+    overflow: auto;
+}
+
+.wrapper-content {
+    padding: 20px 0 40px;
+}
+
+.wrapper-content > .ibox > .ibox-title,
+.wrapper-content > .ibox > .ibox-content {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+
+/* 重置 top-search 样式 */
+
+.navbar-form-custom {
+    width: 240px;
+}
+
+.navbar-form-custom .circle-search {
+    position: relative;
+    border: 1px solid;
+    height: 30px;
+    margin: 15px;
+    border-radius: 24px;
+}
+
+.navbar-form-custom .circle-search .fa-search {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+#top-search {
+    height: 28px;
+    padding-left: 25px;
+}
+
+.page-heading {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+/* 重置 navigation 样式 */
+
+.navbar-static-side .nav-header .profile-element {
+    vertical-align: bottom;
+}
+
+.navbar-static-side .nav-header .img-circle {
+    width: 48px;
+    height: 48px;
+}
+
+
+/* 重置modal样式 */
+
+.inmodal .modal-header {
+    padding: 15px;
+    text-align: left;
+}
+
+.inmodal .modal-header .modal-title {
+    float: left;
+    font-size: 16px;
+}
+
+.inmodal .modal-body {
+    padding: 20px 30px;
+    background-color: #FFF;
+}
+
+.modal-md {
+    width: 450px;
+}
+
+.modal-mdx {
+    width: 750px;
+}
+.modal {
+    text-align: center;
+    padding: 0!important;
+}
+
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.inmodal .modal-body {
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* 重置 datatable */
+
+.dataTables_scroll .dataTables_scrollHead,
+.dataTables_scroll .dataTables_scrollBody {
+    border-right: 1px solid #EBEBEB !important;
+}
+.dataTables_scroll .table {
+    border-right: none;
+}
+
+.dataTables_scroll .dataTables_scrollHead,
+.DTFC_RightWrapper .DTFC_RightHeadWrapper,
+.DTFC_LeftWrapper .DTFC_LeftHeadWrapper {
+    z-index: 1;
+}
+
+.dataTables_scroll .dataTables_scrollHead,
+.dataTables_scroll .dataTables_scrollBody {
+    width: 100% !important;
+}
+
+.dataTables_scroll .table-scrollX,
+.DTFC_ScrollWrapper .table-scrollX {
+    table-layout: fixed;
+    /* margin-top: -17px !important; */
+}
+
+.dataTables_scroll .dataTables_scrollBody thead {
+    font-size: 0;
+}
+
+.DTFC_RightWrapper {
+    right: 0 !important;
+}
+
+.DTFC_RightWrapper .table,
+.DTFC_LeftWrapper .table {
+    margin-bottom: 0 !important;
+}
+
+.DTFC_LeftWrapper .DTFC_LeftBodyWrapper {
+    border-right: 1px solid #EBEBEB;
+}
+
+.DTFC_RightWrapper .DTFC_RightBodyWrapper .table,
+.DTFC_LeftWrapper .DTFC_LeftBodyWrapper .table {
+    margin-top: 0 !important;
+    border-top: none;
+}
+
+.DTFC_RightWrapper .DTFC_RightBodyWrapper .DTFC_RightBodyLiner,
+.DTFC_LeftWrapper .DTFC_LeftBodyWrapper .DTFC_LeftBodyLiner {
+    overflow-x: hidden;
+}
+
+.dataTables_scroll,
+.DTFC_ScrollWrapper {
+    margin-bottom: 8px;
+}
+
+.table tbody {
+    background-color: white;
+}
+
+.ibox.relative .html5buttons {
+    /* position: absolute;
+    top: 16px;
+    right: 10px; */
+    margin-top: -56px;
+    float: right;
+}
+
+.html5buttons a {
+    font-size: 14px;
+}
+
+.html5buttons .btn-primary:focus,
+.html5buttons .btn-primary:active,
+.html5buttons .btn-primary:hover {
+    background-color: #18a689 !important;
+    border-color: #18a689 !important;
+    color: #fff !important;
+}
+
+.ibox-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dataTables_wrapper {
+    padding-bottom: 0;
+}
+
+.dataTables_wrapper .limixin .dataTables_info {
+    float: left;
+    margin-left: 4px;
+    padding-top: 4px;
+}
+
+.dataTables_wrapper .dataTables_length .form-control {
+    padding-top: 2px;
+}
+
+table.dataTable {
+    margin-top: 0 !important;
+}
+
+.input-group-addon.glyphicon {
+    top: 0;
+    cursor: pointer
+}
+
+.table label.btn-block {
+    margin-bottom: 0;
+}
+
+.table label.btn-block input {
+    margin-top: 0;
+}
+
+table.dataTable thead>tr>th.sorting_asc,
+table.dataTable thead>tr>th.sorting_desc,
+table.dataTable thead>tr>th.sorting,
+table.dataTable thead>tr>td.sorting_asc,
+table.dataTable thead>tr>td.sorting_desc,
+table.dataTable thead>tr>td.sorting {
+    background-color: #F5F5F6;
+}
+
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:after {
+    content: " ";
+    background-size: 100% 100%;
+    width: 13px;
+    height: 18px;
+    opacity: 1;
+}
+table.dataTable thead .sorting:after {
+    background: url(../images/sort.svg);
+}
+table.dataTable thead .sorting_asc:after {
+    background: url(../images/asc.svg);
+}
+table.dataTable thead .sorting_desc:after {
+    background: url(../images/desc.svg);
+}
+
+/* reset input[type=number] 样式 */
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+
+
+/* reset select 下三角样式 */
+
+@-moz-document url-prefix() {
+    select.form-control {
+        -moz-appearance: none;
+        background: url("/images/arrow.png") no-repeat scroll right center transparent;
+    }
+}
+
+
+/* reset ui.select 样式 */
+
+.ui-select-container .ui-select-choices .ui-select-choices-row-inner {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.ui-select-container .ui-select-choices .ui-select-choices-row-inner > div {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.ui-select-match-text {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+}
+
+.input-group-addon.select {
+    border: none;
+    padding: 0;
+}
+.input-group-addon.select .ui-select-container,
+.input-group-addon.select .ui-select-match {
+    outline: none;
+}
+.input-group-addon.select .form-control {
+    margin-left: -1px;
+    min-width: 43px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+.input-group-addon.select .ui-select-match-text {
+    overflow: visible;
+}
+.input-group-addon.select .ui-select-bootstrap>.ui-select-choices {
+    margin-top: 32px;
+    min-width: auto;
+}
+.input-group-addon.select .ui-select-choices-row-inner {
+    padding: 0;
+    text-align: center;
+}
+.input-group-addon.select .ui-select-bootstrap .ui-select-toggle>.caret {
+    right: 5px;
+}
+
+/* icheck */
+.iradio_square-green,
+.icheckbox_square-green {
+    margin-right: 4px !important;
+    margin-top: -3px !important;
+}
+
+/* the same to placeholder */
+
+.text-muted {
+    color: #999;
+}
+
+
+/* reset form */
+
+form .form-group .control-label {
+    padding-right: 0;
+}
+
+
+/* reset jstree */
+
+.jstree {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+/* reset a:focus */
+
+a:focus {
+    outline: none;
+}
+
+textarea {
+    resize: none;
+}
+
+/*  ibox */
+.ibox-content-inner {
+	padding-left: 0;
+	padding-right: 0;
+	margin-left:15px;
+	margin-right:15px;
+}
+
+.dataTables_scrollBody .table > tbody > tr > td{
+    white-space: normal;
+    word-break: break-all;
+}

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.postagenetwork.mapper.PostagenetworkMapper">
+	<select id="getpostageNetworkList" resultType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.Postagenetwork">
+		SELECT
+			fop.postage_id postageId,
+			fop.postage_name postageName,
+			fo.op_name opName,
+			fop.pay_mode payMode,
+			fop.is_separate_bill isSeparateBill,
+			fop.plan_flow planFlow,
+			fop.flow_unit flowUnit,
+			fop.valid_days validDays,
+			DATE_FORMAT(fop.create_time,'%Y-%m-%d %H:%i:%s') createTime,
+			DATE_FORMAT(fop.update_time,'%Y-%m-%d %H:%i:%s') updateTime
+		FROM
+			flowmgn_op_postageplan fop,
+			flowmgn_op fo
+		WHERE
+			fop.op_id=fo.op_id 
+			AND fo.owned = 3
+			AND fop.`status` = 1
+		order by fop.create_time desc
+	</select>
+	
+	<select id="getPostageDetail" parameterType="java.lang.Integer" resultType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.Postagenetwork">
+		SELECT
+			fop.postage_id postageId,
+			fop.postage_name postageName,
+			fop.pay_mode payMode,
+			fop.is_separate_bill isSeparateBill,
+			fop.plan_flow planFlow,
+			fop.flow_unit flowUnit,
+			fop.valid_days validDays
+		FROM
+			flowmgn_op_postageplan fop
+		WHERE
+			fop.postage_id = #{postageId}
+	</select>
+	
+	<select id="getNetworkList" parameterType="java.lang.Integer" resultType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.NetworkAccess">
+		SELECT
+			fop.postage_network_id postageNetworkId,
+			fop.postage_id postageId,
+			fon.access_id accessId,
+			fon.access_code accessCode,
+			fon.en_name enName,
+			fon.item_data itemData,
+			fon.item_voice_called itemVoiceCalled,
+			fon.item_msg itemMsg,
+			fon.item_four_g itemFourG,
+			fon.item_black itemBlack,
+			fon.item_white itemWhite,
+			fon.item_apn itemApn
+		FROM
+			flowmgn_op_networkaccess fon
+		JOIN flowmgn_op_postage_network fop ON fon.access_code = fop.access_code
+		AND fon.`status` = 1
+		AND fon.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+		AND fop.postage_id = #{postageId}
+	</select>
+	
+	<select id="getNextPostageId" resultType="java.lang.Integer">
+		select max(postage_id)+1 from flowmgn_op_postageplan
+		<!-- SELECT auto_increment FROM information_schema.`TABLES` WHERE TABLE_SCHEMA='flowplat' AND TABLE_NAME='flowmgn_op_postageplan'; -->
+	</select>
+	
+	<select id="existsByCodeName" parameterType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.NetworkAccess" resultType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.NetworkAccess">
+		select fon.access_id accessId,fon.access_code accessCode,fon.en_name enName 
+		from flowmgn_op_networkaccess fon 
+		where 1=1
+		<if test="accessCode !=null">
+		and fon.access_code=#{accessCode}
+		</if>
+		<if test="enName !=null">
+		and fon.en_name=#{enName}
+		</if>
+	</select>
+	
+	<insert id="batchInsertNetwork" parameterType="java.util.List">
+		insert into flowmgn_op_networkaccess(access_code,en_name,status,item_data,item_voice_called,item_msg,item_four_g,item_white,item_black,item_apn,op_id,create_time,last_operator_id,last_operator_name)
+		values
+		<foreach collection="list" item="item" separator=","  index="index">
+		(#{item.accessCode},#{item.enName},1,#{item.itemData},#{item.itemVoiceCalled},#{item.itemMsg},#{item.itemFourG},#{item.itemWhite},#{item.itemBlack},#{item.itemApn},1,NOW(),0,"")
+		</foreach>
+	</insert>
+	
+	<insert id="insertPostageNetwork" parameterType="java.util.List">
+		insert into flowmgn_op_postage_network(postage_id,access_code,create_time) values
+		<foreach collection="list" separator="," item="item" index="index">
+			(#{item.postageId},#{item.accessCode},NOW())
+		</foreach>
+		
+	</insert>
+	
+	<update id="updatePostage" parameterType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.Postagenetwork">
+		update flowmgn_op_postageplan set postage_name=#{postageName},pay_mode=#{payMode},is_separate_bill=#{isSeparateBill},plan_flow=#{planFlow},valid_days=#{validDays},update_time=NOW()
+		where postage_id=#{postageId}
+	</update>
+	
+	<select id="existsByPostName" parameterType="java.lang.String" resultType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.Postagenetwork">
+		select fop.postage_id postageId,fop.postage_name postageName
+		from flowmgn_op_postageplan fop 
+		where fop.postage_name=#{postageName}
+	</select>
+	
+	<insert id="savePostage" parameterType="com.glsx.oms.fcadmin.biz.card.postagenetwork.model.Postagenetwork">
+		insert into flowmgn_op_postageplan(postage_id,postage_name,pay_mode,is_separate_bill,plan_flow,flow_unit,valid_days,postage_code,op_id,over_unit,over_chargemode,status,create_time,update_time,last_operator_id,last_operator_name) 
+			values(#{postageId},#{postageName},#{payMode},#{isSeparateBill},#{planFlow},#{flowUnit},#{validDays},0,1,'',0,1,NOW(),NOW(),0,"")
+	</insert>
+	
+	<delete id="batchDeleteNetwork" parameterType="java.util.List">
+		delete from flowmgn_op_networkaccess 
+		<where>
+			access_code in
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item.accessCode}
+			</foreach>
+		</where>
+	</delete>
+	
+	<delete id="deletePostageNetworkByPostageId" parameterType="java.lang.Integer">
+		delete from flowmgn_op_postage_network where postage_id=#{postageId}
+	</delete>
+
+</mapper>

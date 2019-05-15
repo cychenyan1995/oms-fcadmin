@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.op.op.mapper.OpMapper">
+
+	<select id="getOpList" resultType="com.glsx.oms.fcadmin.biz.op.op.model.Op">
+	    select
+	      op_id opId,
+		  op_code opCode,
+		  op_name opName,
+		  op_desc opDesc,
+		  prev_code prevCode,
+		  midd_code middCode,
+		  owned owned,
+		  srv_addr srvAddr,
+		  srv_port srvPort,
+		  check_url checkUrl,
+		  sp_account spAccount,
+		  comm_key commKey,
+		  svr_users svrUsers,
+		  svr_password svrPassword,
+		  contact_person contactPerson,
+		  contact_mobile contactMobile,
+		  date_format(create_time,'%Y-%m-%d %H:%i:%s') createTime,
+		  date_format(update_time,'%Y-%m-%d %H:%i:%s') updateTime
+		from flowmgn_op
+		where owned=3
+		order by create_time desc
+	</select>
+	
+	<select id="existsByName" resultType="java.lang.Integer">
+	    select
+	       count(*)
+		from flowmgn_op
+		where 1=1
+		<if test="opName != null">
+		    and op_name=#{opName}
+		</if>
+	</select>
+	
+	<insert id="addOp" useGeneratedKeys="true" keyProperty="opId" parameterType="com.glsx.oms.fcadmin.biz.op.op.model.Op">
+	  <selectKey keyProperty="opCode" order="BEFORE" resultType="java.lang.Integer">
+	     select IFNULL(Max(op_code)+1,100001) opCode  from flowmgn_op where op_code like "1%"
+	  </selectKey>
+	  insert into flowmgn_op (
+	    op_code, 
+        op_name,
+        op_desc,
+        url,
+		appkey,
+        prev_code,
+        midd_code,
+        owned,      
+        srv_addr,
+        srv_port,
+        check_url,
+        sp_account,
+        comm_key,
+        svr_users,
+        svr_password,
+        contact_person,
+        contact_mobile,
+        create_time,
+        update_time,
+        last_operator_id,
+        last_operator_name)
+      values(
+        #{opCode},
+        #{opName},
+        #{opDesc},
+        #{url},
+		#{appkey},
+        #{prevCode},
+        #{middCode},
+        #{owned},
+        #{srvAddr},
+        #{srvPort},
+        #{checkUrl},
+        #{spAccount},
+        #{commKey},
+        #{svrUsers},
+        #{svrPassword},
+        #{contactPerson},
+        #{contactMobile},
+        now(),
+        now(),
+        0,
+        'admin'
+      )
+	</insert>
+	
+	<insert id="addMop" useGeneratedKeys="true" keyProperty="opId" parameterType="com.glsx.oms.fcadmin.biz.op.op.model.Op">
+	  <selectKey keyProperty="opCode" order="BEFORE" resultType="java.lang.Integer">
+	     select IFNULL(Max(op_code)+1,200001) opCode  from flowmgn_op where op_code like "2%"
+	  </selectKey>
+	  insert into flowmgn_op (
+	    op_code, 
+        op_name,
+        op_desc,
+        url,
+		appkey,
+        prev_code,
+        midd_code,
+        owned,      
+        srv_addr,
+        srv_port,
+        check_url,
+        sp_account,
+        comm_key,
+        svr_users,
+        svr_password,
+        contact_person,
+        contact_mobile,
+        create_time,
+        update_time,
+        last_operator_id,
+        last_operator_name)
+      values(
+        #{opCode},
+        #{opName},
+        #{opDesc},
+        #{url},
+		#{appkey},
+        #{prevCode},
+        #{middCode},
+        #{owned},
+        #{srvAddr},
+        #{srvPort},
+        #{checkUrl},
+        #{spAccount},
+        #{commKey},
+        #{svrUsers},
+        #{svrPassword},
+        #{contactPerson},
+        #{contactMobile},
+        now(),
+        now(),
+        0,
+        'admin'
+      )
+	</insert>
+	
+	<select id="getMobileOpList" resultType="com.glsx.oms.fcadmin.biz.op.op.model.Op">
+	    select
+	      op_id opId,
+		  op_code opCode,
+		  op_name opName,
+		  op_desc opDesc,
+		  url url,
+		  appkey appkey,
+		  prev_code prevCode,
+		  midd_code middCode,
+		  owned owned,
+		  srv_addr srvAddr,
+		  srv_port srvPort,
+		  check_url checkUrl,
+		  sp_account spAccount,
+		  comm_key commKey,
+		  svr_users svrUsers,
+		  svr_password svrPassword,
+		  contact_person contactPerson,
+		  contact_mobile contactMobile,
+		  date_format(create_time,'%Y-%m-%d %H:%i:%s') createTime,
+		  date_format(update_time,'%Y-%m-%d %H:%i:%s') updateTime
+		from flowmgn_op
+		where owned=1
+		order by create_time desc
+	</select>
+</mapper>

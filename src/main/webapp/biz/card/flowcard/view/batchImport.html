@@ -1,0 +1,200 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">批量操作</h4>
+        <button type="button" class="close" data-dismiss="modal" ng-click="cancel()">
+            <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="tabs-container">
+            <form name="outerForm" novalidate>        
+            <uib-tabset>
+                <uib-tab heading="启用" select="tabActive(0)">
+                    <div class="panel-body">
+                        <p>
+                            请正确导入卡信息，下载导入模板:
+                            <a href="javascript:void(0)" ng-click="downloadTemplate('3')">导入模板.xls</a>
+                        </p>
+                        <ng-form class="form-horizontal form-fixed form-fixed-4" name="openCard_form" role="form" novalidate>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">导入列表:</label>
+                                <div class="col-sm-10">
+                                    <input type="file" nv-file-select=""
+                                        uploader="uploaderOpencards" name="fileName" ng-model="flowcardData.fileName" upload-shell/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="openLoadShow">
+								<div class="sk-spinner sk-spinner-fading-circle">
+									<div class="sk-circle1 sk-circle"></div>
+									<div class="sk-circle2 sk-circle"></div>
+									<div class="sk-circle3 sk-circle"></div>
+									<div class="sk-circle4 sk-circle"></div>
+									<div class="sk-circle5 sk-circle"></div>
+									<div class="sk-circle6 sk-circle"></div>
+									<div class="sk-circle7 sk-circle"></div>
+									<div class="sk-circle8 sk-circle"></div>
+									<div class="sk-circle9 sk-circle"></div>
+									<div class="sk-circle10 sk-circle"></div>
+									<div class="sk-circle11 sk-circle"></div>
+									<div class="sk-circle12 sk-circle"></div>
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <div ng-show="openIsShow">导入成功<span>{{openSuccessCount}}</span>条，失败
+									<b class="">{{openFailCount}}</b>条，请下载<a href="javascript:void(0)" ng-click="downloadFile('1')">导出失败列表</a></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label required">启用原因:</label>
+                                <div class="col-sm-10">
+                                    <textarea name="openReason" rows="4"
+                                        class="col-sm-10 form-control" ng-required="true"
+                                        ng-model="flowcardData.openReason" maxlength="50" check-length></textarea>
+                                    <div class="m-t-xs"
+                                        ng-show="openCard_form.openReason.$invalid && openCard_form.submitted">
+                                        <small class="text-danger"
+                                            ng-show="openCard_form.openReason.$error.required">请填写启用原因！</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="停用" select="tabActive(1)">
+                    <div class="panel-body">
+                        <p>
+                            请正确导入卡信息，下载导入模板:<a href="" ng-click="downloadTemplate('2')">导入模板.xls</a>
+                        </p>
+                        <ng-form class="form-horizontal form-fixed form-fixed-4" name="stopCard_form" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">导入列表:</label>
+                                <div class="col-sm-10">
+                                    <input type="file" nv-file-select=""
+                                        uploader="uploaderStopcards" name="fileName" ng-model="flowcardData.fileName" upload-shell/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="stopLoadShow">
+								<div class="sk-spinner sk-spinner-fading-circle">
+									<div class="sk-circle1 sk-circle"></div>
+									<div class="sk-circle2 sk-circle"></div>
+									<div class="sk-circle3 sk-circle"></div>
+									<div class="sk-circle4 sk-circle"></div>
+									<div class="sk-circle5 sk-circle"></div>
+									<div class="sk-circle6 sk-circle"></div>
+									<div class="sk-circle7 sk-circle"></div>
+									<div class="sk-circle8 sk-circle"></div>
+									<div class="sk-circle9 sk-circle"></div>
+									<div class="sk-circle10 sk-circle"></div>
+									<div class="sk-circle11 sk-circle"></div>
+									<div class="sk-circle12 sk-circle"></div>
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <div ng-show="stopIsShow">导入成功<span>{{stopSuccessCount}}</span>条，失败
+										<b class="">{{stopFailCount}}</b>条，请下载<a href="javascript:void(0)" ng-click="downloadFile('2')">导出失败列表</a></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label required">停用原因:</label>
+                                <div class="col-sm-10">
+                                    <textarea name="stopReason" rows="4"
+                                        class="col-sm-10 form-control" ng-required="true"
+                                        ng-model="flowcardData.stopReason" maxlength="50" check-length></textarea>
+                                    <div class="m-t-xs"
+                                        ng-show="stopCard_form.stopReason.$invalid && stopCard_form.submitted">
+                                        <small class="text-danger"
+                                            ng-show="stopCard_form.stopReason.$error.required">请填写停用原因！</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="续费" select="tabActive(2)">
+                    <div class="panel-body">
+                        <ng-form class="form-horizontal form-fixed form-fixed-7" name="renewCard_form" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label text-danger required">请选择续费套餐:</label>
+                                <div class="control-content">
+                                <div class="row">
+                                <div class="col-sm-4">
+                                    <select class="form-control" ng-required="true" ng-model="flowcardData.packageType" ng-change="getPackage()">
+                                        <option value="">请选择</option>
+                                        <option value="2">流量套餐</option>
+                                        <option value="3">流量包</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-8">
+                                    <ui-select ng-model="flowcardData.packageName" name="packageType" ng-required="true" theme="bootstrap" ng-change="getPackageName()">
+                                        <ui-select-match placeholder="请选择">{{$select.selected.text}}</ui-select-match>
+                                        <ui-select-choices repeat="item in packageList">
+                                            <div ng-bind=" item.text "></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<label class="col-sm-4 control-label"></label>
+                            	<div class="m-t-xs col-sm-3"
+                                   ng-show="renewCard_form.packageType.$invalid && renewCard_form.submitted">
+                                   <small class="text-danger"
+                                       ng-show="renewCard_form.packageType.$error.required">请选择续费套餐！</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label text-danger">请导入流量卡:</label>
+                                <div class="col-sm-10 control-content">
+                                <div class="form-control-static">
+                                    	请正确导入卡信息，下载导入模板:<a href="" ng-click="downloadTemplate('4')">导入模板.xls</a>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">导入列表:</label>
+                                <div class="col-sm-10 control-content">
+                                    <input type="file" nv-file-select=""
+                                        uploader="uploaderRenewcards" name="fileName" ng-model="flowcardData.fileName" upload-shell/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="renewLoadShow">
+								<div class="sk-spinner sk-spinner-fading-circle">
+									<div class="sk-circle1 sk-circle"></div>
+									<div class="sk-circle2 sk-circle"></div>
+									<div class="sk-circle3 sk-circle"></div>
+									<div class="sk-circle4 sk-circle"></div>
+									<div class="sk-circle5 sk-circle"></div>
+									<div class="sk-circle6 sk-circle"></div>
+									<div class="sk-circle7 sk-circle"></div>
+									<div class="sk-circle8 sk-circle"></div>
+									<div class="sk-circle9 sk-circle"></div>
+									<div class="sk-circle10 sk-circle"></div>
+									<div class="sk-circle11 sk-circle"></div>
+									<div class="sk-circle12 sk-circle"></div>
+								</div>
+							</div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"></label>
+                                <div class="col-sm-7">
+                                    <div ng-show="renewIsShow">{{renewMsg}}<a href="javascript:void(0)" ng-click="downloadFile('3')">导出失败列表</a></div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer" ng-switch="curTabIndex">
+        <button type="submit" ng-switch-when="0" class="btn btn-primary" ng-click="batchOpenCard();">确认启用</button>
+        <button type="submit" ng-switch-when="1" class="btn btn-primary" ng-click="batchStopCard();">确认停用</button>
+        <button type="submit" ng-switch-when="2" class="btn btn-primary" ng-click="batchRenewCard();">确认续费</button>
+        <button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+    </div>
+</div>

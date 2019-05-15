@@ -1,0 +1,106 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">新建迁移</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" class="form-horizontal form-fixed form-fixed-4"
+			novalidate name="add_transferRecord_form">
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">旧卡:</label>
+				<div class="col-lg-9 control-content">
+					<div class="row">
+						<div class="col-lg-3">
+							<ui-select ng-model="queryData.srcQueryType" theme="bootstrap"> <ui-select-match
+								placeholder="请选择">{{$select.selected.text}}</ui-select-match> <ui-select-choices
+								repeat="item in queryTypeList">
+							<div ng-click="binding(item)" ng-bind=" item.text "></div>
+							</ui-select-choices> </ui-select>
+						</div>
+						<div class="col-lg-9">
+							<input name="srcQueryValue" class="form-control" type="text"
+								v-onblur v-async="srcAsyncCallback(value)" ng-required="true" ng-model="queryData.srcQueryValue" />
+						</div>								   
+					</div>
+					<div class="m-t-xs" 
+						    ng-show="add_transferRecord_form.srcQueryValue.$invalid && add_transferRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_transferRecord_form.srcQueryValue.$error.required">请填写卡信息</small> 
+						<small class="text-danger" 
+						    ng-show="add_transferRecord_form.srcQueryValue.$error.vAsync">卡信息不存在，请重新输入</small>
+					</div>
+				</div>
+			</div>
+				<div class="form-group">
+				<label class="col-lg-3 control-label required">新卡:</label>
+				<div class="col-lg-9 control-content">
+					<div class="row">
+						<div class="col-lg-3">
+							<ui-select ng-model="queryData.dstQueryType" theme="bootstrap"> <ui-select-match
+								placeholder="请选择">{{$select.selected.text}}</ui-select-match> <ui-select-choices
+								repeat="item in queryTypeList">
+							<div ng-click="binding(item)" ng-bind=" item.text "></div>
+							</ui-select-choices> </ui-select>
+						</div>
+						<div class="col-lg-9">
+							<input name="dstQueryValue" class="form-control" type="text"
+								v-onblur v-async="dstAsyncCallback(value)" ng-required="true" ng-model="queryData.dstQueryValue" />
+						</div>								   
+					</div>
+					<div class="m-t-xs" 
+						    ng-show="add_transferRecord_form.dstQueryValue.$invalid && add_transferRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_transferRecord_form.dstQueryValue.$error.required">请填写卡信息</small> 
+						<small class="text-danger" 
+						    ng-show="add_transferRecord_form.dstQueryValue.$error.vAsync">卡信息不存在，请重新输入</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">迁移原因</label>
+				<div class="col-lg-9 control-content">
+					<textarea ng-model="transferRecord.transReason" ng-required="true"
+						name="transReason" class="form-control" maxlength="200"></textarea>
+				    <div class="m-t-xs" 
+						    ng-show="add_transferRecord_form.transReason.$invalid && add_transferRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_transferRecord_form.transReason.$error.required">请填写迁移原因</small> 
+			        </div>
+				</div>				
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">联系人</label>
+				<div class="col-lg-9 control-content">
+					<input name="contactorName" class="form-control" type="text"
+						ng-required="true" ng-model="transferRecord.contactorName"
+						maxlength="20" />
+					<div class="m-t-xs" 
+						    ng-show="add_transferRecord_form.contactorName.$invalid && add_transferRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_transferRecord_form.contactorName.$error.required">请填写联系人</small> 
+			        </div>
+				</div>
+				
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">联系电话</label>
+				<div class="col-lg-9 control-content">
+					<input name="contactorTel" class="form-control" type="text"
+						ng-required="true" ng-model="transferRecord.contactorTel"
+						ng-pattern="/^1[3|4|5|7|8][0-9]{9}$/" maxlength="11" />
+					<div class="m-t-xs" 
+						    ng-show="add_transferRecord_form.contactorTel.$invalid && add_transferRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_transferRecord_form.contactorTel.$error.required">请填写联系电话</small> 
+			            <small class="text-danger"
+							ng-show="add_transferRecord_form.contactorTel.$error.pattern">请填写正确的手机号</small> 
+			        </div>
+				</div>
+				
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="submitTransfer();">提交</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

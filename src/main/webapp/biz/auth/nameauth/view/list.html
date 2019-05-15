@@ -1,0 +1,129 @@
+<div>
+
+	<!--  第一部分：菜单导航 start -->
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10">
+			<ol class="breadcrumb">
+				<li>实名认证</li>
+				<li class="active"><strong>实名认证</strong></li>
+			</ol>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!--  第一部分：菜单导航 end -->
+	
+
+	<!--  第二部分：列表部分 start -->
+	<div class="row wrapper wrapper-content animated fadeInRight advance-wrapper">
+		<div class="ibox relative">
+		
+			<!--  搜索部分 start -->
+			<div class="ibox-title clearfix">
+				<div class="row">
+					<div class="col-xs-8">
+					
+						<!--  关键字搜索部分 start -->
+						<form class="form-inline" role="form" ng-submit="nameauthSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="nameauthQuery.keyWork" placeholder="请输入网卡号、ICCID、IMSI" ng-disabled="advanceExpand"/>
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpands" ng-click="toggleClose();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" ng-disabled="advanceExpands" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpands}">高级搜索</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        
+                        <!--  高级搜索部分 start -->
+						<div class="advance" ng-show="advanceExpandShow" style="min-width: 432px;">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>高级搜索</h5>
+								</div>
+								<div class="ibox-content">
+									<form class="form-horizontal form-fixed form-fixed-6" name="advance_form" role="form">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">ICCID:</label>
+											<div class="control-content">
+												<input type="text" class="form-control" ng-model="nameauthQuery.iccid">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">网卡号:</label>
+											<div class="control-content">
+	                                            <input type="text" class="form-control" ng-model="nameauthQuery.cardNo">
+                                            </div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">IMSI:</label>
+											<div class="control-content">
+                                                <input type="text" class="form-control" ng-model="nameauthQuery.imsi">
+                                            </div>
+										</div>
+										<div class="form-group">
+                                            <label class="col-sm-2 control-label">审核状态:</label>
+                                            <div class="control-content">
+	                                             <ui-select ng-model="nameauthQuery.status" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in statusList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">运营商类型:</label>
+                                            <div class="control-content">
+                                                 <ui-select ng-model="nameauthQuery.owned" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in ownedList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">运营商名称:</label>
+                                            <div class="control-content">
+                                                 <ui-select ng-model="nameauthQuery.opName" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in opList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+                                        </div>
+                                    </form>
+								</div>
+								
+								<div class="ibox-footer clearfix">
+									<button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+									<div class="pull-right">
+										<button type="button" class="btn btn-primary" ng-click="nameauthHighSearchForm();">搜索</button>
+										<button type="button" class="btn btn-default" ng-click="toggleClose();">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  高级搜索部分 end -->
+					</div>
+				</div>
+			</div>
+			<!--  搜索部分 end -->
+			
+
+			<!--  表格部分 start -->
+			<div class="ibox-content">
+				<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+			</div>
+			<!--  表格部分 end -->
+			
+		</div>
+	</div>
+	<!--  第二部分：列表部分 end -->
+	
+</div>
+

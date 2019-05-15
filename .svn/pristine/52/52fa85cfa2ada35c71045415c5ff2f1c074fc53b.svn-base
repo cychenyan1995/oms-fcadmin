@@ -1,0 +1,100 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">套餐详情</h4>
+		<button type="button" class="close" data-dismiss="modal"
+				ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+
+	<div class="modal-body clearfix">
+		<form class="row">
+			<div class="form-group col-sm-6 text-ellipsis">
+				<label>套餐名称:&nbsp;&nbsp;</label>
+				<span title="{{flowPackageQuery.packageName}}">{{flowPackageQuery.packageName}}</span>
+			</div>
+			<div class="form-group col-sm-6 text-ellipsis">
+				<label>套餐别名:&nbsp;&nbsp;</label>
+				<span title="{{flowPackageQuery.packageAlias}}">{{flowPackageQuery.packageAlias}}</span>
+			</div>
+			<div class="form-group col-sm-6">
+				<label>服务商:&nbsp;&nbsp;</label>
+				{{flowPackageQuery.spName}}
+			</div>
+			<div class="form-group col-sm-6">
+				<label>运营商:&nbsp;&nbsp;</label>
+				{{opOwned(flowPackageQuery.owned)}}
+			</div>
+			<div class="form-group col-sm-6">
+				<label>价格:&nbsp;&nbsp;</label>
+				{{flowPackageQuery.packagePrice}}元
+			</div>
+
+			<hr class="col-sm-12 no-padding m-t-none">
+
+			<!--<div class="form-group col-sm-6">
+				<label>激活宽限期:&nbsp;&nbsp;</label>
+				{{flowPackageQuery.autoactivePackageDays}}天
+			</div>-->
+			<div class="form-group col-sm-6">
+				<label>有效期:&nbsp;&nbsp;</label>
+				{{flowPackageQuery.validCycle}}{{validCycleUnit(flowPackageQuery.validCycleUnit)}}
+			</div>
+			<div class="form-group col-sm-6">
+				<label>流量用完操作:&nbsp;&nbsp;</label>
+				{{overFlowOp(flowPackageQuery.overFlowOp)}}
+			</div>
+
+			<hr class="col-sm-12 no-padding m-t-none">
+
+			<div class="form-group col-sm-6">
+				<label>分离计费:&nbsp;&nbsp;</label>
+				{{isSeparateBill(flowPackageQuery.isSeparateBill)}}
+			</div>
+			<div class="form-group col-sm-6">
+				<label>套餐类别:&nbsp;&nbsp;</label>
+				{{packageType(flowPackageQuery.packageType) }}
+			</div>
+
+			<div class="form-group col-sm-12">
+				<label>套餐:&nbsp;&nbsp;</label>
+				<table class="table table-bordered m-b-none" style="font-size: 10px;">
+					<thead>
+					<tr>
+						<th>套餐名</th>
+						<th>套餐类型</th>
+						<th>总流量</th>
+						<th>月付流量</th>
+						<th>月数</th>
+						<th>月付时间</th>
+						<th>月底清零</th>
+						<th>生效时间</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-if="flowPackageQuery.flowservType == 0">
+						<td class="text-ellipsis" title="{{flowPackageQuery.flowservName}}">{{flowPackageQuery.flowservName}}</td>
+						<td class="text-ellipsis" title="{{flowservType(flowPackageQuery.flowservType)}}">{{flowservType(flowPackageQuery.flowservType) }}</td>
+						<td class="text-ellipsis" title="{{flowPackageQuery.showFlow}}">{{flowPackageQuery.showFlow}}</td>
+						<td>/</td>
+						<td>/</td>
+						<td>/</td>
+						<td>/</td>
+						<td>/</td>
+					</tr>
+					<tr ng-if=flowPackageQuery.flowservType == 1">
+					<td class="text-ellipsis" title="{{flowPackageQuery.flowservName}}">{{flowPackageQuery.flowservName}}</td>
+					<td class="text-ellipsis" title="{{flowservType(flowPackageQuery.flowservType)}}">{{flowservType(flowPackageQuery.flowservType) }}</td>
+					<td>/</td>
+					<td class="text-ellipsis" title="{{flowPackageQuery.perCycleFlow}} / 月">{{flowPackageQuery.perCycleFlow}}{{flowPackageQuery.flowUnit}} / 月</td>
+					<td class="text-ellipsis" title="{{flowPackageQuery.chargeCycle}}月">{{flowPackageQuery.chargeCycle}}月</td>
+					<td class="text-ellipsis" title="每月  {{flowPackageQuery.flowservPayDate}} 日">每月  {{flowPackageQuery.flowservPayDate}} 日</td>
+					<td class="text-ellipsis" title="{{isMonthClean(flowPackageQuery.isMonthClean)}}">{{isMonthClean(flowPackageQuery.isMonthClean) }}</td>
+					<td class="text-ellipsis" title="{{isNowApply(flowPackageQuery.isNowApply)}}">{{isNowApply(flowPackageQuery.isNowApply) }}</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+</div>

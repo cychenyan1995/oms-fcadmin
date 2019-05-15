@@ -1,0 +1,17 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">创建订单</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" class="form-horizontal" novalidate name="frm">
+			<div class="form-group">
+				<label class="col-lg-4 control-label required">字段:</label> 
+				<input type="text" class="form-control">
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="submitFlowPool();">提交</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

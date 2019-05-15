@@ -1,0 +1,106 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">{{isEdit ? "编辑" : "新增"}}资费计划</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form role="form" class="form-horizontal form-fixed form-fixed-6" novalidate name="postageFrm">
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">资费计划名称</label> <!--  -->
+				<div class="control-content">
+                   <input type="text" class="form-control" name="postageName" ng-required="true" ng-model="postageNetwork.postageName" v-async="asyncCallback(value)"  maxlength=100>
+                   <div class="m-t-xs"
+							ng-show="postageFrm.postageName.$invalid && postageFrm.submitted">
+						<small class="text-danger"
+							ng-show="postageFrm.postageName.$error.required">请输入资费计划名称!</small>
+						<small class="text-danger" 
+							ng-show="postageFrm.postageName.$error.vAsync">资费计划名称已存在!</small>
+						</div>
+                </div>
+				
+			</div>
+			<div class="form-group">
+                <label class="col-sm-2 control-label required">计划类型:</label>
+                <div class="control-content">
+                    <ui-select ng-model="postageNetwork.payMode" name="payMode" theme="bootstrap" >
+                        <ui-select-match placeholder="预付－灵活共享">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in payModelist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">支持分离计划:</label>
+                <div class="control-content">
+                    <ui-select ng-model="postageNetwork.isSeparateBill" name="isSeparateBill" theme="bootstrap" >
+                        <ui-select-match placeholder="不支持">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in isSeparateBilllist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">期限时长:</label> 
+				<div class="control-content">
+					 <div class="input-group">
+		                   <input type="text" class="form-control" name="validDays" ng-pattern="/^[1-9]\d*$/" ng-required="true" ng-model="postageNetwork.validDays">
+		                  	<span class="input-group-addon">天</span>
+		                </div>
+		               <div class="m-t-xs"
+						ng-show="postageFrm.validDays.$invalid && postageFrm.submitted">
+					<small class="text-danger"
+						ng-show="postageFrm.validDays.$error.required">请输入期限时长!</small>
+					<small class="text-danger"
+						ng-show="postageFrm.validDays.$error.pattern">期限时长必须为整型数据!</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">每月流量:</label> 
+				<div class="control-content">
+					 <div class="input-group">
+		               <input type="text" class="form-control" name="planFlow" ng-pattern="/^[1-9]\d*$/" ng-required="true" ng-model="postageNetwork.planFlow">
+		               <span class="input-group-addon">M</span>
+		               </div>
+		               <div class="m-t-xs"
+						ng-show="postageFrm.planFlow.$invalid && postageFrm.submitted">
+					<small class="text-danger"
+						ng-show="postageFrm.planFlow.$error.required">请输入每月流量!</small>
+					<small class="text-danger"
+						ng-show="postageFrm.planFlow.$error.pattern">每月流量必须为整型数据!</small>
+					</div>
+				</div>
+		</form>
+	</div>
+</div>
+	
+<div>
+	<!-- 通讯计划 -->
+	<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">通讯计划详情</h4>
+		<div class="col-lg-9 control-content">
+			<div>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="openAddNetworkWindow(item);">添加</button>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<!--  表格部分 start -->
+	<div class="modal-body">
+		<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+	</div>
+	<!--  表格部分 end -->
+</div>
+	
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="submitPostagenetwork();">提交</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

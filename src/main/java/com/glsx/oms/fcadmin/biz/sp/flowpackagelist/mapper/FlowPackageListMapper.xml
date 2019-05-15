@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.sp.flowpackagelist.mapper.FlowPackageListMapper">
+	
+	<insert id="saveFlowPackageList" useGeneratedKeys="true"
+		keyProperty="flowlistId"
+		parameterType="com.glsx.oms.fcadmin.biz.sp.flowpackagelist.model.FlowPackageList">
+		insert into flowmgn_sp_flowpackage_list
+		(package_id,flowserv_id,
+		create_time,update_time,last_operator_id,last_operator_name)
+		values
+		(#{packageId},#{flowservId},
+		NOW(),NOW(),#{lastOperatorId},#{lastOperatorName})
+	</insert>
+</mapper>

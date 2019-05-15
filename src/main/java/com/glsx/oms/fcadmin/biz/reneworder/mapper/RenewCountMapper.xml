@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.reneworder.mapper.RenewCountMapper">
+	<select id="getRenewInfo" resultType="com.glsx.oms.fcadmin.biz.reneworder.model.RenewCount">
+		select 
+		order_payTime orderPaytime,
+		spId_Name spIdName,
+		wechat_totalNum wechatTotalNum,
+		open_totalNum openTotalNum,
+		wechat_totalMoney wechatTotalMoney,
+		open_totalMoney openTotalMoney,
+		(wechat_totalNum+open_totalNum) allTotalNum,
+		(wechat_totalMoney+open_totalMoney) allTotalMoney
+		from flowmgn_recharge_order_renew
+		order by order_payTime desc
+	</select>
+</mapper>

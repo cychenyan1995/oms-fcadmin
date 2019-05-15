@@ -1,0 +1,79 @@
+<div>
+
+	<!--  第一部分：菜单导航 start -->
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10">
+			<ol class="breadcrumb">
+				<li>运营商管理</li>
+				<li class="active"><strong>资费计划</strong></li>
+			</ol>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!--  第一部分：菜单导航 end -->
+	
+
+	<!--  第二部分：列表部分 start -->
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="ibox relative">
+		
+			<!--  搜索部分 start -->
+			<div class="ibox-title clearfix">
+				<div class="row">
+					<div class="form-group col-xs-8">
+					
+						<!--  关键字搜索部分 start -->
+						<form class="form-inline" role="form" ng-submit="postagePlanSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="postagePlanQuery.keyWork" placeholder="请修改为合适字段" ng-disabled="advanceExpand"/>
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpand" ng-click="toggleAdvance();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpand}">高级筛选</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        
+                        <!--  高级搜索部分 start -->
+						<div class="advance" ng-show="advanceExpand">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>高级搜索</h5>
+								</div>
+								<div class="ibox-content">
+									<form class="form-inline" name="advance_form" role="form">
+										<!-- 这里是填充表单部分... -->
+										<div class="hr-line-dashed"></div>
+									</form>
+								</div>
+								<div class="ibox-footer clearfix">
+									<button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+									<div class="pull-right">
+										<button type="button" class="btn btn-primary" ng-click="postagePlanHighSearchForm();">搜索</button>
+										<button type="button" class="btn btn-default" ng-click="toggleAdvance();">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  高级搜索部分 end -->
+					</div>
+				</div>
+			</div>
+			<!--  搜索部分 end -->
+			
+
+			<!--  表格部分 start -->
+			<div class="ibox-content">
+				<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+			</div>
+			<!--  表格部分 end -->
+			
+		</div>
+	</div>
+	<!--  第二部分：列表部分 end -->
+	
+</div>
+

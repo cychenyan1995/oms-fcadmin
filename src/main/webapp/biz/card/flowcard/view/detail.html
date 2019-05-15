@@ -1,0 +1,239 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">卡详情</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body no-padding" style="overflow-x: auto;">
+		<div class="row" style="width: 1600px;">
+			<div class="col-sm-5">
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>卡基本信息</h3>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered m-b-none table-layout">
+							<tbody>
+								<tr>
+									<td width="22%">ICCID:</td>
+									<td width="28%">{{flowCard.iccid}}</td>
+									<td width="22%">IMSI:</td>
+									<td width="28%">{{flowCard.imsi}}</td>
+								</tr>
+								<tr>
+									<td>网卡号:</td>
+									<td>{{flowCard.cardNo}}</td>
+									<td>IMEI:</td>
+									<td>{{flowCard.imei}}</td>
+								</tr>
+								<tr>
+									<td>卡状态:</td>
+									<td>{{cardStatus(flowCard.status)}}</td>
+									<td>套餐状态:</td>
+									<td>{{packageStatus(flowCard.packageStatus,flowCard.emptyStatus)}}</td>
+								</tr>
+								<tr>
+									<td>导入时间:</td>
+									<td>{{flowCard.inStockTime}}</td>
+									<td>卡激活时间:</td>
+									<td>{{flowCard.activeTime}}</td>
+								</tr>
+								<tr>
+									<td>当月流量（MB）:</td>
+									<td>{{flowCard.consumeMonthflow}}</td>
+									<td>总流量（MB）:</td>
+									<td>{{flowCard.totalFlow}}</td>
+								</tr>
+								<tr>
+									<td>剩余流量（MB）:</td>
+									<td>{{flowCard.remainTotalflow}}</td>
+									<td>消耗流量（MB）:</td>
+									<td>{{flowCard.usedTotalflow}}</td>
+								</tr>
+								<tr>
+									<td>套餐开始时间:</td>
+									<td>{{flowCard.packageBegintime}}</td>
+									<td>套餐结束时间:</td>
+									<td>{{flowCard.packageEndtime}}</td>
+								</tr>
+								<tr>
+									<td>发往商户:</td>
+									<td>{{flowCard.spName}}</td>
+									<td>出库时间:</td>
+									<td>{{flowCard.outStockTime}}</td>
+								</tr>
+								<tr>
+									<td>流量池名称:</td>
+									<td>{{flowCard.flowpoolName}}</td>
+									<td>开通套餐手机号：</td>
+									<td>{{flowCard.phoneNo}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>运营商信息</h3>
+					</div>
+					<div class="ibox-content ibox-content-inner">
+						<table class="table table-bordered m-b-none table-layout">
+							<tbody>
+								<tr>
+									<td width="22%">运营商类型:</td>
+									<td width="28%">{{opOwned(flowCard.owned)}}</td>
+									<td width="22%">运营商名称:</td>
+									<td width="28%">{{flowCard.opName}}</td>
+								</tr>
+								<tr>
+									<td>卡类型:</td>
+									<td>{{cardType(flowCard.cardType)}}</td>
+									<td>运营商发货时间:</td>
+									<td>{{flowCard.deliveryTime}}</td>
+								</tr>
+								<tr>
+									<td>资费开始时间:</td>
+									<td>{{flowCard.postageBegintime}}</td>
+									<td>资费结束时间:</td>
+									<td>{{flowCard.postageEndtime}}</td>
+								</tr>
+								<tr>
+									<td>初始资费计划:</td>
+									<td class="text-wrap">{{flowCard.initPostageName}}</td>
+									<td>当前资费计划:</td>
+									<td class="text-wrap">{{flowCard.currPostageName}}</td>
+								</tr>
+								<tr>
+									<td>初始通信计划:</td>
+									<td class="text-wrap">{{flowCard.initaccessName}}</td>
+									<td>当前通信计划:</td>
+									<td class="text-wrap">{{flowCard.currAccessName}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>服务商信息</h3>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered m-b-none">
+							<thead>
+								<tr>
+									<th>商户名称</th>
+									<th>商户级别</th>
+									<th>发货时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{{flowCard.spName}}</td>
+									<td>{{level(flowCard.level)}}</td>
+									<td>{{flowCard.outStockTime}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-7">
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>当前套餐</h3>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered m-b-none">
+							<thead>
+								<tr>
+									<th width="26%">套餐名称</th>
+									<th width="10%">套餐类型</th>
+									<th width="10%">套餐类别</th>
+									<th width="12%">总流量（MB）</th>
+									<th width="8%">有效期</th>
+									<th width="17%">开通时间</th>
+									<th width="17%">结束时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="curPkg in curList">
+									<td>{{curPkg.packageName}}</td>
+									<td>{{type(curPkg.packageType)}}</td>
+									<td>{{category(curPkg.packageType)}}</td>
+									<td>{{flowType(curPkg)}}</td>
+									<td>{{curPkg.validCycle}}{{validity(curPkg.validCycleUnit)}}</td>
+									<td>{{curPkg.packageBeginTime}}</td>
+									<td>{{curPkg.packageEndTime}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>计划套餐</h3>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered m-b-none">
+							<thead>
+								<tr>
+									<th width="26%">套餐名称</th>
+									<th width="10%">套餐类型</th>
+									<th width="10%">套餐类别</th>
+									<th width="12%">总流量（MB）</th>
+									<th width="8%">有效期</th>
+									<th width="17%">开通时间</th>
+									<th width="17%">结束时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="curPkg in planList">
+									<td>{{curPkg.packageName}}</td>
+									<td>{{type(curPkg.packageType)}}</td>
+									<td>{{category(curPkg.packageType)}}</td>
+									<td>{{flowType(curPkg)}}</td>
+									<td>{{curPkg.validCycle}}{{validity(curPkg.validCycleUnit)}}</td>
+									<td>{{curPkg.packageBeginTime}}</td>
+									<td>{{curPkg.packageEndTime}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="ibox float-e-margins m-b-none">
+					<div class="ibox-title no-borders">
+						<h3>历史套餐</h3>
+					</div>
+					<div class="ibox-content">
+						<table class="table table-bordered m-b-none">
+							<thead>
+								<tr>
+									<th width="26%">套餐名称</th>
+									<th width="10%">套餐类型</th>
+									<th width="10%">套餐类别</th>
+									<th width="12%">总流量（MB）</th>
+									<th width="8%">有效期</th>
+									<th width="17%">开通时间</th>
+									<th width="17%">结束时间</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="curPkg in hisList">
+									<td>{{curPkg.packageName}}</td>
+									<td>{{type(curPkg.packageType)}}</td>
+									<td>{{category(curPkg.packageType)}}</td>
+									<td>{{flowType(curPkg)}}</td>
+									<td>{{curPkg.validCycle}}{{validity(curPkg.validCycleUnit)}}</td>
+									<td>{{curPkg.packageBeginTime}}</td>
+									<td>{{curPkg.packageEndTime}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

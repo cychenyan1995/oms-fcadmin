@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.postage.mapper.PostageMapper">
+	
+	<select id="getByPostageId" resultType="com.glsx.oms.fcadmin.biz.card.postage.model.Postage" 
+  	parameterType="java.lang.Integer">
+    SELECT
+		postage.pool_postagel_id poolPostagelId,
+		postage.flowpool_id flowpoolId,
+		postage.postage_id postageId
+	FROM
+		flowmgn_flowpool_postage postage
+	WHERE 1=1 and postage.postage_id = #{postageId}
+</select>
+</mapper>

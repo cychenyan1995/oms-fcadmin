@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.order.outorder.mapper.OutOrderMapper">
+	
+	<select id="selectByPageNumSize" resultType="com.glsx.oms.fcadmin.biz.order.outorder.model.OutOrder" 
+  	parameterType="com.glsx.oms.fcadmin.biz.order.outorder.model.OutOrder">
+    SELECT
+		sorder.out_order_id outOrderId,
+		sorder.out_order_no outOrderNo,
+		sorder.out_order_name outOrderName,
+		package.package_name packageName,
+		sorder.card_type cardType,
+		sorder.total_card totalCard,
+		sorder.total_price totalPrice,
+		sp.sp_code spCode,
+		sp.sp_name spName,
+		sorder.status status,
+		
+		sorder.express_no expressNo,
+		sorder.recipients recipients,
+		sorder.recipients_mobileno recipientsMobileno,
+		sorder.recipients_addr recipientsAddr,
+		sorder.recipients_postcode recipientsPostcode,
+		sorder.fail_reason failReason,
+		sorder.fail_reason_desc failReasonDesc,
+		sorder.express_pic expressPic,
+		DATE_FORMAT(sorder.create_time,'%Y-%m-%d %H:%i:%s') orderTime,
+		DATE_FORMAT(sorder.post_time,'%Y-%m-%d %H:%i:%s') postTime 
+	FROM
+		flowmgn_out_stock_order sorder
+		LEFT JOIN flowmgn_sp_flowpackage package ON sorder.package_id = package.package_id 
+		LEFT JOIN flowmgn_sp sp ON sorder.sp_id = sp.sp_id 
+	WHERE 1=1
+   <if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">  
+        and (sorder.out_order_no = '${keyWork}' or package.package_name = '${keyWork}'
+        	or sp.sp_code = '${keyWork}')
+   </if>
+   
+   <if test="orderBegintime != null and orderEndtime != null">  
+        and sorder.create_time between #{orderBegintime} and #{orderEndtime}  
+    </if>
+    <if test="outOrderNo != null">  
+        and sorder.out_order_no like '%${outOrderNo}%'  
+    </if>
+    <if test="status != null">  
+        and sorder.status =#{status} 
+    </if>
+    <if test="packageName != null">  
+        and package.package_code =#{packageName}   
+    </if>
+   <if test="cardType != null">  
+        and sorder.card_type=#{cardType}
+   </if>
+   <if test="spName != null">  
+        and sp.sp_code =#{spName}  
+    </if>
+   <if test="recipients != null">  
+        and sorder.recipients like '%${recipients}%' 
+   </if>
+   ORDER BY sorder.create_time desc 
+  </select>
+  
+  <update id="addDeliveryResult" parameterType="com.glsx.oms.fcadmin.biz.order.outorder.model.OutOrder">
+  	 	update flowmgn_out_stock_order set express_no=#{expressNo},status=#{status}, express_pic = #{expressPic},
+  	 	 fail_reason =#{failReason}, fail_reason_desc = #{failReasonDesc} 
+  	 	<if test="status == 3">  
+          ,post_time = NOW()  
+   		</if>
+  	 	where out_order_id = #{outOrderId}
+  </update>
+  
+  <select id="getByOrderNo" resultType="com.glsx.oms.fcadmin.biz.order.outorder.model.OutOrder" 
+  	parameterType="java.lang.String">
+    SELECT
+		sorder.out_order_id outOrderId,
+		sorder.out_order_no outOrderNo,
+		sorder.sp_id spId,
+		sorder.package_id packageId,
+		sorder.out_order_name outOrderName,
+		sorder.total_card totalCard,
+		sorder.total_price totalPrice
+	FROM
+		flowmgn_out_stock_order sorder
+	WHERE sorder.out_order_no = #{orderNo}
+	  AND sorder.status != 2
+  </select>
+  
+  <select id="getStockCount" resultType="java.lang.Integer" 
+  	parameterType="java.lang.Integer">
+    SELECT
+		count(card_id)
+	FROM
+		flowmgn_out_stock_order_detail
+	WHERE out_order_id = #{outOrderId}
+  </select>
+  
+</mapper>

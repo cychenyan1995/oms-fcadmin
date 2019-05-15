@@ -1,0 +1,31 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">快递详情</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal form-fixed form-fixed-4"
+			name="advance_form" role="form" ng-submit="outOrderHighSearchForm();">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">快递单号:</label>
+				<div class="col-sm-5">
+					<div class="form-control-static">
+						{{outOrderQuery.expressNo}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">快递单据:</label>
+				<div class="col-sm-5">
+					<div class="form-control-static">
+						<img ng-src="{{outOrderQuery.expressPic}}"
+							style="max-width: 300px; max-height: 300px; margin: 0 auto; display: block;" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

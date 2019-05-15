@@ -1,0 +1,55 @@
+<div>
+
+	<!--  第一部分：菜单导航 start -->
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10">
+			<ol class="breadcrumb">
+				<li>附加功能</li>
+				<li class="active"><strong>下载列表</strong></li>
+			</ol>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!--  第一部分：菜单导航 end -->
+	
+
+	<!--  第二部分：列表部分 start -->
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="ibox relative">
+		
+			<!--  搜索部分 start -->
+			<div class="ibox-title clearfix">
+				<div class="row">
+					<div class="form-group col-xs-8">
+					
+						<!--  关键字搜索部分 start -->
+						<form class="form-inline" role="form" ng-submit="taskSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="taskQuery.keyWork" placeholder="请输入下载名称" ng-disabled="advanceExpand"/>
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpand" ng-click="toggleAdvance();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" type="submit">搜索</button>
+                            </div>
+                            
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        
+					</div>
+				</div>
+			</div>
+			<!--  搜索部分 end -->
+			
+
+			<!--  表格部分 start -->
+			<div class="ibox-content">
+				<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+			</div>
+			<!--  表格部分 end -->
+			
+		</div>
+	</div>
+	<!--  第二部分：列表部分 end -->
+	
+</div>
+

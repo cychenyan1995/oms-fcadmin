@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.recovery.transfer.mapper.TransferRecordMapper">
+	
+	<select id="getAll"
+		resultType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferRecord"
+		parameterType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferRecord">
+  select
+	   trans_record_id transRecordId, 
+       src_iccid srcIccid,
+       dst_iccid dstIccid,
+       src_imsi srcImsi,
+       dst_imsi dstImsi,
+       src_card_no srcCardNo,
+       dst_card_no dstCardNo,
+       (case when op_name=1 then '移动'
+             when op_name=2 then '电信'
+             when op_name=3 then '联通'
+       else '' end) opName,
+       (case when source=1 then '开放平台' 
+            when source=2 then '流量管理平台'
+       else '' end) source, 
+       sp_name spName,
+       trans_reason transReason,
+       date_format(request_time,'%Y-%m-%d %H:%i:%s') requestTime,
+       trans_status transStatus,
+       IFNULL(fail_reason,'') failReason,
+       date_format(trans_time,'%Y-%m-%d %H:%i:%s') transTime,
+       contactor_name contactorName,
+       contactor_tel contactorTel
+  from flowmgn_card_transfer_record
+  where 1=1
+  <if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">
+      and (src_card_no =#{keyWork} or src_iccid =#{keyWork} or src_imsi =#{keyWork} 
+        or dst_card_no =#{keyWork} or dst_iccid =#{keyWork} or dst_imsi =#{keyWork})
+  </if>
+  <if test="transRecordId != null">
+      and trans_record_id=#{transRecordId}
+  </if>
+  <if test="srcIccid != null">
+      and src_iccid like '%${srcIccid}%'
+  </if>
+  <if test="dstIccid != null">
+      and dst_iccid like '%${dstIccid}%'
+  </if>
+  <if test="srcCardNo != null">
+      and src_card_no like '%${srcCardNo}%'
+  </if>
+  <if test="dstCardNo != null">
+      and dst_card_no like '%${dstCardNo}%'
+  </if>
+  <if test="srcImsi != null">
+      and src_imsi like '%${srcImsi}%'
+  </if>
+  <if test="dstImsi != null">
+      and dst_imsi like '%${dstImsi}%'
+  </if>
+  <if test="opName != null">
+      and op_name=#{opName}
+  </if>
+  <if test="transStatus != null">
+      and trans_status=#{transStatus}
+  </if>
+  <if test="requestStartTime != null and requestEndTime != null">
+      and request_time between #{requestStartTime} and #{requestEndTime}
+  </if>
+  <if test="transStartTime != null and transEndTime != null">
+      and trans_time between #{transStartTime} and #{transEndTime}
+  </if>
+  <if test="source != null">
+      and source=#{source}
+  </if>
+  <if test="spName != null">
+      and sp_name=#{spName}
+  </if>
+  order by create_time desc
+  </select>
+  
+  <select id="existsByTransferCard" resultType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferCard"
+		parameterType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferRecord">
+ 
+  select 
+       card.iccid iccid,
+       card.imsi imsi,
+       card.card_no cardNo,
+       op.owned opName,
+       CONCAT(sp.sp_code,"/",sp.sp_name) spName,
+       card.status cardStatus,
+       card.package_status packageStatus
+  from flowmgn_flowcard card 
+  left join flowmgn_flowaccount account on card.card_id=account.card_id
+  join flowmgn_op op on card.op_id=op.op_id 
+  left join flowmgn_sp sp on card.sp_id=sp.sp_id
+  where 1=1
+  <if test="srcIccid != null">
+      and iccid = #{srcIccid}
+  </if>
+  <if test="dstIccid != null">
+      and iccid = #{dstIccid}
+  </if>		
+  <if test="srcCardNo != null">
+      and card_no = #{srcCardNo}
+  </if>
+  <if test="dstCardNo != null">
+      and card_no = #{dstCardNo}
+  </if>
+  <if test="srcImsi != null">
+      and imsi like #{srcImsi}
+  </if>
+  <if test="dstImsi != null">
+      and imsi like #{dstImsi}
+  </if>
+  </select>
+  
+  <update id="transferingOp" parameterType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferRecord">
+     update flowmgn_card_transfer_record 
+     set 
+     trans_status=#{transStatus},
+     trans_time=now(),
+     update_time=now()
+     <if test="failReason !=null or failReason !=''">
+       ,fail_reason=#{failReason}
+     </if> 
+     where trans_record_id=#{transRecordId}
+  </update>
+  
+
+  
+  <insert id="addTransferRecord" useGeneratedKeys="true" keyProperty="transRecordId" parameterType="com.glsx.oms.fcadmin.biz.recovery.transfer.model.TransferRecord">
+  insert into flowmgn_card_transfer_record 
+    (src_iccid,
+     dst_iccid,
+     src_imsi,
+     dst_imsi,
+     src_card_no,
+     dst_card_no,
+     op_name,
+     source,
+     sp_name,
+     trans_reason,
+     request_time,
+     trans_status,
+     contactor_name,
+     contactor_tel,
+     create_time,
+     update_time)
+    values (
+     #{srcIccid},
+     #{dstIccid},
+     #{srcImsi},
+     #{dstImsi},
+     #{srcCardNo},
+     #{dstCardNo},
+     #{opName},
+     #{source},
+     #{spName},
+     #{transReason},
+     now(),
+     #{transStatus},
+     #{contactorName},
+     #{contactorTel},
+     now(),
+     now()
+    );
+	</insert>
+	
+</mapper>

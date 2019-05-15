@@ -1,0 +1,97 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">编辑商户</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body ofy-visible">
+		<form role="form" class="form-horizontal" novalidate name="spFrm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">商户名称:</label>
+				<div class="col-sm-5">
+					<div class="form-control-static">
+						{{sp.spName}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">级别:</label>
+				<div class="col-sm-5">
+					<div class="form-control-static">
+						{{sp.level}}
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">联系人</label> <!--  -->
+				<div class="col-sm-5">
+                   <input type="text" class="form-control" name="contactperson" ng-click="clickContactperson()" ng-blur="blurContactperson()" ng-required="true" ng-model="sp.contactperson"  maxlength=20>
+                   <div class="m-t-xs"
+							ng-show="spFrm.contactperson.$invalid && spFrm.submitted">
+						<small class="text-danger"
+							ng-show="spFrm.contactperson.$error.required">请输入联系人!</small>
+				   </div>
+                </div>
+            </div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label required">联系电话</label> <!--  -->
+				<div class="col-sm-5">
+                   <input type="text" class="form-control" name="contactphone" ng-click="clickContactphone()" ng-blur="blurContactphone()" ng-required="true" ng-pattern="contactphonePattern" ng-model="sp.contactphone"  maxlength=11>
+                   <div class="m-t-xs"
+							ng-show="spFrm.contactphone.$invalid && spFrm.submitted">
+						<small class="text-danger"
+							ng-show="spFrm.contactphone.$error.required">请输入联系电话!</small>
+						<small class="text-danger"
+							ng-show="spFrm.contactphone.$error.pattern">请输入有效的联系电话!</small>
+						<!-- <small class="text-danger" 
+							ng-show="spFrm.contactphone.$error.vAsync"></small> -->
+				   </div>
+                </div>
+            </div>
+            <div class="form-group">
+				<label class="col-sm-2 control-label required">联系地址:</label>
+				<div class="col-sm-4">
+                    <ui-select ng-model="sp.province" ng-required="true" ng-change="changeProvince()" name="province" theme="bootstrap" >
+                        <ui-select-match placeholder="省份">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in provinceList">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                     <div class="m-t-xs"
+							ng-show="spFrm.province.$invalid && spFrm.submitted">
+						<small class="text-danger"
+							ng-show="spFrm.province.$error.required">请选择省!</small>
+				   </div>
+                </div>
+				<div class="col-sm-4">
+                    <ui-select ng-model="sp.city" ng-required="true" name="city" theme="bootstrap" >
+                        <ui-select-match placeholder="城市">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in cityList">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                     <div class="m-t-xs"
+							ng-show="spFrm.city.$invalid && spFrm.submitted">
+						<small class="text-danger"
+							ng-show="spFrm.city.$error.required">请选择市!</small>
+				   </div>
+                </div>
+                <div class="col-sm-8 col-sm-push-2 m-t">
+                   <input type="text" class="form-control" name="otherAddr" ng-click="changeOtherAddr()" ng-blur="blurOtherAddr()" ng-required="true" ng-model="sp.otherAddr"  maxlength=50>
+                   <div class="m-t-xs"
+							ng-show="spFrm.otherAddr.$invalid && spFrm.submitted">
+						<small class="text-danger"
+							ng-show="spFrm.otherAddr.$error.required">请填写详细地址!</small>
+				   </div>
+                </div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="submitSp();">提交</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

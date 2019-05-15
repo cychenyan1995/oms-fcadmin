@@ -1,0 +1,177 @@
+<div>
+    <!--  第一部分：菜单导航 start -->
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <ol class="breadcrumb">
+                <li>购卡订单管理</li>
+                <li class="active"><strong>购卡订单管理</strong></li>
+            </ol>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <!--  第一部分：菜单导航 end -->
+    <!--  第二部分：列表部分 start -->
+    <div class="row wrapper wrapper-content animated fadeInRight advance-wrapper">
+        <div class="ibox relative">
+            <!--  搜索部分 start -->
+            <div class="ibox-title clearfix">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <!--  关键字搜索部分 start -->
+                        <form class="form-inline" role="form" ng-submit="outOrderSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="outOrderQuery.keyWork" placeholder="请输入订单编号、套餐名称、商户号" ng-disabled="advanceExpand" />
+                                <!-- <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpand" ng-click="toggleAdvance();" aria-hidden="true"></span> -->
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpands" ng-click="toggleClose();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" ng-disabled="advanceExpands" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpands}">高级搜索</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        <!--  高级搜索部分 start -->
+                        <div class="advance" ng-show="advanceExpandShow" style="min-width: 432px;">
+                            <div class="ibox">
+                                <div class="ibox-title">
+                                    <h5>高级搜索</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <!-- 这里是填充表单部分... -->
+                                    <form class="form-horizontal form-fixed form-fixed-6" name="advance_form" role="form" ng-submit="outOrderHighSearchForm();">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">订单时间:</label>
+                                            <div class="control-content">
+                                                <input date-range-picker option="{range: true}" name="orderTime" class="form-control date-picker" type="text" ng-model="outOrderQuery.orderTime" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">订单编号:</label>
+                                            <div class="control-content">
+                                                <input type="text" class="form-control" ng-model="outOrderQuery.outOrderNo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">订单状态:</label>
+                                            <div class="control-content">
+                                                <ui-select ng-model="outOrderQuery.status" theme="bootstrap">
+                                                    <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+                                                    <ui-select-choices repeat="item in statusList">
+                                                        <div ng-bind=" item.text "></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">套餐名称:</label>
+                                            <div class="control-content">
+                                                <ui-select ng-model="outOrderQuery.packageName" theme="bootstrap">
+                                                    <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+                                                    <ui-select-choices repeat="item in pkgServiceList">
+                                                        <div ng-bind=" item.text "></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">卡类型:</label>
+                                            <div class="control-content">
+                                                <ui-select ng-model="outOrderQuery.cardType" theme="bootstrap">
+                                                    <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+                                                    <ui-select-choices repeat="item in cardTypeList">
+                                                        <div ng-bind=" item.text "></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">商户名称:</label>
+                                            <div class="control-content">
+                                                <ui-select ng-model="outOrderQuery.spName" theme="bootstrap">
+                                                    <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+                                                    <ui-select-choices repeat="item in serviceList">
+                                                        <div ng-bind=" item.text "></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">收货人:</label>
+                                            <div class="control-content">
+                                                <input type="text" class="form-control" ng-model="outOrderQuery.recipients">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="ibox-footer clearfix">
+                                    <button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-primary" ng-click="outOrderHighSearchForm();">搜索</button>
+                                        <button type="button" class="btn btn-default" ng-click="toggleClose();">取消</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  高级搜索部分 end -->
+                    </div>
+                </div>
+            </div>
+            <!--  搜索部分 end -->
+            <!--  表格部分 start -->
+            <div class="ibox-content">
+                <div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns" />
+            </div>
+            <!--  表格部分 end -->
+        </div>
+    </div>
+    <!--  第二部分：列表部分 end -->
+</div>
+<script type="text/ng-template" id="detail.html">
+    <div class="inmodal">
+        <div class="modal-header">
+            <h4 class="modal-title">收货人信息</h4>
+            <button type="button" class="close" data-dismiss="modal" ng-click="cancel()">
+                <span aria-hidden="true">×</span>
+                <span class="sr-only">Close</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal form-fixed form-fixed-4" name="advance_form" role="form" ng-submit="outOrderHighSearchForm();">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">收货人:</label>
+                    <div class="col-sm-10">
+                        <div class="form-control-static">
+                            {{outOrderQuery.recipients}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">联系电话:</label>
+                    <div class="col-sm-10">
+                        <div class="form-control-static">
+                            {{outOrderQuery.recipientsMobileno}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">收货地址:</label>
+                    <div class="col-sm-10">
+                        <div class="form-control-static">
+                            {{outOrderQuery.recipientsAddr}}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">邮政编码:</label>
+                    <div class="col-sm-10">
+                        <div class="form-control-static">
+                            {{outOrderQuery.recipientsPostcode}}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

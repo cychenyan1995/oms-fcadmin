@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.flowpool.mapper.FlowPoolMonthDetailMapper">
+
+	<select id="selectByPageNumSize" resultType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPoolMonthDetail"
+		parameterType="com.glsx.oms.fcadmin.biz.card.flowpool.model.FlowPoolMonthDetail">
+		SELECT
+		    pool.flowpool_id flowpoolId,
+		    mflow.consume_month consumeMonth,
+			pool.flowpool_name flowpoolName,
+			sp.sp_name spName,
+			mflow.sp_month_totalflow currmonthTotalflow,
+			mflow.sp_month_usedflow currmonthUsedflow,
+			mflow.card_total cardTotal,
+			mflow.add_card addCard,
+			mflow.stock_card stockCard,
+			mflow.open_card openCard,
+			mflow.cancel_card cancelCard,
+			DATE_FORMAT(pool.create_time,'%Y-%m-%d %H:%i:%s') createTime 
+		FROM flowmgn_flowpool_sp_monthflow mflow
+		LEFT JOIN flowmgn_flowpool pool ON pool.flowpool_id = mflow.flowpool_id
+		LEFT JOIN flowmgn_sp sp ON sp.sp_id = mflow.sp_id 
+		WHERE pool.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+		ORDER BY consume_month desc
+
+	</select>
+
+</mapper>

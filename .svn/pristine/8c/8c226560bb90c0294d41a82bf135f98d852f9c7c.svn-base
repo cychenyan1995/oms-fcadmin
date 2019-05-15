@@ -1,0 +1,14 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">通讯计划详情</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+		<!--  表格部分 start -->
+		<div class="modal-body">
+			<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+		</div>
+		<!--  表格部分 end -->
+</div>

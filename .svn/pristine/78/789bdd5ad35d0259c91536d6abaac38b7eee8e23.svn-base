@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.card.flowcard.mapper.FlowCardMapper">
+
+	<select id="getCount" resultType="java.lang.Integer" parameterType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCard">
+  	SELECT COUNT(1) FROM flowmgn_flowcard card
+  	LEFT JOIN flowmgn_flowcard_nameauth auth ON card.card_id = auth.card_id
+  	LEFT JOIN flowmgn_flowaccount account ON card.card_id = account.card_id
+  	LEFT JOIN flowmgn_flowpool_postage post ON card.postage_id = post.postage_id
+  	WHERE card.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	<if test="queryText != null and queryText != '' and queryText != '已启用高级搜索'">
+			and (card.card_no = #{queryText} or card.iccid = #{queryText}
+			or card.imsi = #{queryText} or card.imei = #{queryText})
+		</if>
+		<if test="iccid != null">
+			and card.iccid like '%${iccid}%'
+		</if>
+		<if test="imsi != null">
+			and card.imsi like '%${imsi}%'
+		</if>
+		<if test="cardNo != null">
+			and card.card_no like '%${cardNo}%'
+		</if>
+		<if test="imei != null">
+			and card.imei like '%${imei}%'
+		</if>
+		<if test="isAuthname != null and isAuthname == 4">
+			and card.is_authname=0 and auth.status is null
+		</if>
+		<if test="isAuthname != null and isAuthname != 4">
+			and auth.status=#{isAuthname}
+		</if>
+		<if test="statusChangeReason != null">
+			and card.status_change_reason_id=#{statusChangeReason}
+		</if>
+		<if test="spId != null">
+			and card.sp_id=#{spId}
+		</if>
+		<if test="poolId != null">
+			and post.flowpool_id=#{poolId}
+		</if>
+		<if test="activeBegintime != null and activeEndtime != null">
+			and card.active_time between #{activeBegintime} and #{activeEndtime}
+		</if>
+		<if test="deliveryStarttime != null and deliveryEndtime != null">
+			and card.delivery_time between #{deliveryStarttime} and
+			#{deliveryEndtime}
+		</if>
+		<if test="startTime != null and endTime != null">
+			and card.package_begintime between #{startTime} and #{endTime}
+		</if>
+		<if test="startDate != null and endDate != null">
+			and card.package_endtime between #{startDate} and #{endDate}
+		</if>
+		<if test="inStockBegintime != null and inStrockEndtime != null">
+			and card.in_stock_time between #{inStockBegintime} and
+			#{inStrockEndtime}
+		</if>
+		<if test="outStrockBegintime != null and outStrockEndtime != null">
+			and card.out_stock_time between #{outStrockBegintime} and
+			#{outStrockEndtime}
+		</if>
+		<if test="status != null">
+			and card.status=#{status}
+		</if>
+		<if test="packageStatus != null">
+			and card.package_status=#{packageStatus}
+		</if>
+		<if test="curUsedSmall != null and curUsedSmall != 0 and curUsedBig == 0">
+			and account.op_month_usedflow >= #{curUsedSmall}
+		</if>
+		<if test="curUsedBig != null and curUsedBig != 0 and curUsedSmall == 0">
+			and account.op_month_usedflow <![CDATA[<=]]>
+			#{curUsedBig}
+		</if>
+		<if
+			test="curUsedSmall != null and curUsedSmall != 0 and curUsedBig != null and curUsedBig != 0">
+			and account.op_month_usedflow between #{curUsedSmall} and #{curUsedBig}
+		</if>
+		<if test="totalSmall != null and totalSmall != 0 and totalBig == 0">
+			and account.totalflow >= #{totalSmall}
+		</if>
+		<if test="totalBig != null and totalBig != 0 and totalSmall == 0">
+			and account.totalflow <![CDATA[<=]]>
+			#{totalBig}
+		</if>
+		<if
+			test="totalSmall != null and totalSmall != 0 and totalBig != null and totalBig != 0">
+			and account.totalflow between #{totalSmall} and #{totalBig}
+		</if>
+		<if
+			test="usedSmall != null and usedSmall != 0 and usedBig == null and usedBig == 0">
+			and account.used_totalflow >= #{usedSmall}
+		</if>
+		<if test="usedBig != null and usedBig != 0 and usedSmall == 0">
+			and account.used_totalflow <![CDATA[<=]]>
+			#{usedBig}
+		</if>
+		<if
+			test="usedSmall != null and usedSmall != 0 and usedBig != null and usedBig != 0">
+			and account.used_totalflow between #{usedSmall} and #{usedBig}
+		</if>
+		<if test="remainSmall != null and remainSmall != 0 and remainBig == 0">
+			and account.remain_totalflow >= #{remainSmall}
+		</if>
+		<if test="remainBig != null and remainBig != 0 and remainSmall == 0">
+			and account.remain_totalflow <![CDATA[<=]]>
+			#{remainBig}
+		</if>
+		<if
+			test="remainSmall != null and remainSmall != 0 and remainBig != null and remainBig != 0">
+			and account.remain_totalflow between #{remainSmall} and #{remainBig}
+		</if>
+  </select>
+  
+	<select id="selectByPageNumSize"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCard"
+		parameterType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCard">
+			SELECT
+		card.card_id cardId,
+		card.card_no cardNo,
+		card.iccid iccid,
+		card.iccidn iccidn,
+		card.imsi imsi,
+		card.imei imei,
+		card.status status,
+		card.package_status packageStatus,
+		card.empty_status emptyStatus,
+		auth.status authStatus,
+		DATE_FORMAT(card.active_time,'%Y-%m-%d %H:%i:%s') activeTime,
+		DATE_FORMAT(card.package_begintime,'%Y-%m-%d %H:%i:%s') packageBegintime,
+		DATE_FORMAT(card.package_endtime,'%Y-%m-%d %H:%i:%s') packageEndtime,
+		card.is_authname isAuthname,
+		DATE_FORMAT(card.in_stock_time,'%Y-%m-%d %H:%i:%s') inStockTime,
+		DATE_FORMAT(card.out_stock_time,'%Y-%m-%d %H:%i:%s') outStockTime,
+		DATE_FORMAT(card.delivery_time,'%Y-%m-%d') deliveryTime,
+		card.status_change_reason statusChangeReason,
+		sp.sp_name spName,
+		account.op_month_usedflow consumeMonthflow,
+		account.totalflow totalFlow,
+		account.used_totalflow usedTotalflow,
+		account.remain_totalflow remainTotalflow,
+		fs.is_unlimit_flow isUnlimitFlow
+		FROM flowmgn_flowcard card
+		LEFT JOIN flowmgn_flowaccount account ON card.card_id = account.card_id
+		LEFT JOIN flowmgn_sp sp ON card.sp_id = sp.sp_id
+		LEFT JOIN flowmgn_flowpool_postage post ON card.postage_id = post.postage_id
+		LEFT JOIN flowmgn_flowcard_nameauth auth ON card.card_id = auth.card_id
+		LEFT JOIN flowmgn_sp_flowpackage pk ON card.package_id = pk.package_id
+		LEFT JOIN flowmgn_sp_flowpackage_list li ON pk.package_id = li.package_id
+		LEFT JOIN flowmgn_sp_flowservice fs ON li.flowserv_id = fs.flowserv_id
+		WHERE card.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+		<if test="queryText != null and queryText != '' and queryText != '已启用高级搜索'">
+			and (card.card_no = #{queryText} or card.iccid = #{queryText}
+			or card.imsi = #{queryText} or card.imei = #{queryText})
+		</if>
+		<if test="iccid != null">
+			and card.iccid like '%${iccid}%'
+		</if>
+		<if test="imsi != null">
+			and card.imsi like '%${imsi}%'
+		</if>
+		<if test="cardNo != null">
+			and card.card_no like '%${cardNo}%'
+		</if>
+		<if test="imei != null">
+			and card.imei like '%${imei}%'
+		</if>
+		<if test="isAuthname != null and isAuthname == 4">
+			and card.is_authname=0 and auth.status is null
+		</if>
+		<if test="isAuthname != null and isAuthname != 4">
+			and auth.status=#{isAuthname}
+		</if>
+		<if test="statusChangeReason != null">
+			and card.status_change_reason_id=#{statusChangeReason}
+		</if>
+		<if test="spId != null">
+			and card.sp_id=#{spId}
+		</if>
+		<if test="poolId != null">
+			and post.flowpool_id=#{poolId}
+		</if>
+		<if test="activeBegintime != null and activeEndtime != null">
+			and card.active_time between #{activeBegintime} and #{activeEndtime}
+		</if>
+		<if test="deliveryStarttime != null and deliveryEndtime != null">
+			and card.delivery_time between #{deliveryStarttime} and
+			#{deliveryEndtime}
+		</if>
+		<if test="startTime != null and endTime != null">
+			and card.package_begintime between #{startTime} and #{endTime}
+		</if>
+		<if test="startDate != null and endDate != null">
+			and card.package_endtime between #{startDate} and #{endDate}
+		</if>
+		<if test="inStockBegintime != null and inStrockEndtime != null">
+			and card.in_stock_time between #{inStockBegintime} and
+			#{inStrockEndtime}
+		</if>
+		<if test="outStrockBegintime != null and outStrockEndtime != null">
+			and card.out_stock_time between #{outStrockBegintime} and
+			#{outStrockEndtime}
+		</if>
+		<if test="status != null">
+			and card.status=#{status}
+		</if>
+		<if test="packageStatus != null">
+			and card.package_status=#{packageStatus}
+		</if>
+		<if test="curUsedSmall != null and curUsedSmall != 0 and curUsedBig == 0">
+			and account.op_month_usedflow >= #{curUsedSmall}
+		</if>
+		<if test="curUsedBig != null and curUsedBig != 0 and curUsedSmall == 0">
+			and account.op_month_usedflow <![CDATA[<=]]>
+			#{curUsedBig}
+		</if>
+		<if
+			test="curUsedSmall != null and curUsedSmall != 0 and curUsedBig != null and curUsedBig != 0">
+			and account.op_month_usedflow between #{curUsedSmall} and #{curUsedBig}
+		</if>
+		<if test="totalSmall != null and totalSmall != 0 and totalBig == 0">
+			and account.totalflow >= #{totalSmall}
+		</if>
+		<if test="totalBig != null and totalBig != 0 and totalSmall == 0">
+			and account.totalflow <![CDATA[<=]]>
+			#{totalBig}
+		</if>
+		<if
+			test="totalSmall != null and totalSmall != 0 and totalBig != null and totalBig != 0">
+			and account.totalflow between #{totalSmall} and #{totalBig}
+		</if>
+		<if
+			test="usedSmall != null and usedSmall != 0 and usedBig == null and usedBig == 0">
+			and account.used_totalflow >= #{usedSmall}
+		</if>
+		<if test="usedBig != null and usedBig != 0 and usedSmall == 0">
+			and account.used_totalflow <![CDATA[<=]]>
+			#{usedBig}
+		</if>
+		<if
+			test="usedSmall != null and usedSmall != 0 and usedBig != null and usedBig != 0">
+			and account.used_totalflow between #{usedSmall} and #{usedBig}
+		</if>
+		<if test="remainSmall != null and remainSmall != 0 and remainBig == 0">
+			and account.remain_totalflow >= #{remainSmall}
+		</if>
+		<if test="remainBig != null and remainBig != 0 and remainSmall == 0">
+			and account.remain_totalflow <![CDATA[<=]]>
+			#{remainBig}
+		</if>
+		<if
+			test="remainSmall != null and remainSmall != 0 and remainBig != null and remainBig != 0">
+			and account.remain_totalflow between #{remainSmall} and #{remainBig}
+		</if>
+		<if test="column == null or column == '' ">
+			ORDER BY card.card_id DESC
+		</if>
+		<if test="column == 'iccid' and sort == 'asc'">
+			ORDER BY card.iccid asc
+		</if>
+		<if test="column == 'iccid' and sort == 'desc'">
+			ORDER BY card.iccid desc
+		</if>
+		<if test="column == 'imei' and sort == 'asc'">
+			ORDER BY card.imei asc
+		</if>
+		<if test="column == 'imei' and sort == 'desc'">
+			ORDER BY card.imei desc
+		</if>
+		<if test="column == 'status' and sort == 'asc'">
+			ORDER BY card.status asc
+		</if>
+		<if test="column == 'status' and sort == 'desc'">
+			ORDER BY card.status desc
+		</if>
+		<if test="column == 'packageStatus' and sort == 'asc'">
+			ORDER BY card.package_status asc
+		</if>
+		<if test="column == 'packageStatus' and sort == 'desc'">
+			ORDER BY card.package_status desc
+		</if>
+		<if test="column == 'consumeMonthflow' and sort == 'asc'">
+			ORDER BY account.op_month_usedflow asc
+		</if>
+		<if test="column == 'consumeMonthflow' and sort == 'desc'">
+			ORDER BY account.op_month_usedflow desc
+		</if>
+		<if test="column == 'totalFlow' and sort == 'asc'">
+			ORDER BY account.totalflow asc
+		</if>
+		<if test="column == 'totalFlow' and sort == 'desc'">
+			ORDER BY account.totalflow desc
+		</if>
+		<if test="column == 'usedTotalflow' and sort == 'asc'">
+			ORDER BY account.used_totalflow asc
+		</if>
+		<if test="column == 'usedTotalflow' and sort == 'desc'">
+			ORDER BY account.used_totalflow desc
+		</if>
+		<if test="column == 'remainTotalflow' and sort == 'asc'">
+			ORDER BY account.remain_totalflow asc
+		</if>
+		<if test="column == 'remainTotalflow' and sort == 'desc'">
+			ORDER BY account.remain_totalflow desc
+		</if>
+		<if test="column == 'activeTime' and sort == 'asc'">
+			ORDER BY card.active_time asc
+		</if>
+		<if test="column == 'activeTime' and sort == 'desc'">
+			ORDER BY card.active_time desc
+		</if>
+		<if test="column == 'packageBegintime' and sort == 'asc'">
+			ORDER BY card.package_begintime asc
+		</if>
+		<if test="column == 'packageBegintime' and sort == 'desc'">
+			ORDER BY card.package_begintime desc
+		</if>
+		<if test="column == 'packageEndtime' and sort == 'asc'">
+			ORDER BY card.package_endtime asc
+		</if>
+		<if test="column == 'packageEndtime' and sort == 'desc'">
+			ORDER BY card.package_endtime desc
+		</if>
+		<if test="column == 'isAuthname' and sort == 'asc'">
+			ORDER BY auth.status asc
+		</if>
+		<if test="column == 'isAuthname' and sort == 'desc'">
+			ORDER BY auth.status desc
+		</if>
+		<if test="column == 'inStockTime' and sort == 'asc'">
+			ORDER BY card.in_stock_time asc
+		</if>
+		<if test="column == 'inStockTime' and sort == 'desc'">
+			ORDER BY card.in_stock_time desc
+		</if>
+		 LIMIT #{searchStart},#{searchSize}
+	</select>
+	
+	<select id="getCardDetail"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCard"
+		parameterType="java.lang.Integer">
+		SELECT
+			card.card_id cardId,
+			card.card_no cardNo,
+			card.iccid iccid,
+			card.iccidn iccidn,
+			card.imsi imsi,
+			card.imei imei,
+			card.status status,
+			card.package_status packageStatus,
+			card.empty_status emptyStatus,
+			card.card_type cardType,
+			card.phone_no phoneNo,
+			DATE_FORMAT(card.delivery_time,'%Y-%m-%d') deliveryTime,
+			DATE_FORMAT(card.postage_begintime,'%Y-%m-%d') postageBegintime,
+			DATE_FORMAT(card.postage_endtime,'%Y-%m-%d') postageEndtime,
+			DATE_FORMAT(card.active_time,'%Y-%m-%d') activeTime,
+			DATE_FORMAT(card.package_begintime,'%Y-%m-%d') packageBegintime,
+			DATE_FORMAT(card.package_endtime,'%Y-%m-%d') packageEndtime,
+			DATE_FORMAT(card.in_stock_time,'%Y-%m-%d') inStockTime,
+			DATE_FORMAT(card.out_stock_time,'%Y-%m-%d') outStockTime,
+			sp.sp_name spName,
+			sp.level level,
+			op.owned owned,
+			op.op_name opName,
+			account.op_month_usedflow consumeMonthflow,
+			account.totalflow	totalFlow,
+			account.used_totalflow usedTotalflow,
+			account.remain_totalflow remainTotalflow,
+			pool.flowpool_name flowpoolName,
+			(SELECT postage_name FROM flowmgn_op_postageplan where postage_id = card.init_postage_id) initPostageName,
+			(SELECT postage_name FROM flowmgn_op_postageplan where postage_id = card.postage_id) currPostageName,
+			(SELECT en_name FROM flowmgn_op_networkaccess where access_id = card.init_access_id) initaccessName,
+			(SELECT en_name FROM flowmgn_op_networkaccess where access_id = card.curr_access_id) currAccessName 
+		FROM 
+		flowmgn_flowcard card 
+		LEFT JOIN flowmgn_flowaccount account ON card.card_id = account.card_id  
+		LEFT JOIN flowmgn_sp sp ON card.sp_id = sp.sp_id 
+		LEFT JOIN flowmgn_op op ON card.op_id = op.op_id 
+		LEFT JOIN flowmgn_flowpool_postage post ON card.postage_id = post.postage_id 
+		LEFT JOIN flowmgn_flowpool pool ON pool.flowpool_id = post.flowpool_id 
+		WHERE card.card_id = #{cardId}
+	</select>
+
+	<select id="getCurPackage"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCard"
+		parameterType="java.lang.String">
+		SELECT
+		card.iccid iccid,
+		card.imsi imsi,
+		pck.package_code packageCode,
+		pck.package_name packageName
+		FROM
+		flowmgn_flowcard card
+		LEFT JOIN flowmgn_sp_flowpackage pck ON card.package_id = pck.package_id
+		WHERE card.iccid = #{iccid} and  card.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	</select>
+
+	<insert id="batchCreate" useGeneratedKeys="true" parameterType="java.util.List">
+		insert into flowmgn_flowcard
+		(card_no,iccid,iccidn,imsi,card_type,op_id,in_stock_time,create_time,last_operator_id,last_operator_name)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.cardNo},#{item.iccid},#{item.iccidn},#{item.imsi},#{item.type},#{item.opId},NOW(),NOW(),#{item.lastOperatorId},#{item.lastOperatorName})
+		</foreach>
+	</insert>
+
+	<select id="getFlowcardListByCardNo"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCardImport"
+		parameterType="java.util.List">
+		SELECT
+		a.card_no cardNo,
+		a.iccidn iccidn,
+		a.iccid iccid,
+		a.imsi imsi,
+		a.op_id
+		FROM flowmgn_flowcard a
+		<where>
+			a.card_no in
+			<foreach collection="list" item="cardNo" open="("
+				separator="," close=")">#{cardNo}</foreach>
+		</where>
+		and a.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	</select>
+
+	<select id="getFlowcardListByImsi"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCardImport"
+		parameterType="java.util.List">
+		SELECT
+		a.card_no cardNo,
+		a.iccidn iccidn,
+		a.iccid iccid,
+		a.imsi imsi,
+		a.op_id
+		FROM flowmgn_flowcard a
+		<where>
+			a.imsi in
+			<foreach collection="list" item="imsi" open="(" separator=","
+				close=")">#{imsi}</foreach>
+		</where>
+			and a.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	</select>
+
+	<select id="getFlowcardListByIccid"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.FlowCardImport"
+		parameterType="java.util.List">
+		SELECT
+		a.card_no cardNo,
+		a.iccidn iccidn,
+		a.iccid iccid,
+		a.imsi imsi,
+		a.op_id,
+		a.out_stock_time outStockTime 
+		FROM flowmgn_flowcard a
+		<where>
+			a.iccid in
+			<foreach collection="list" item="iccid" open="("
+				separator="," close=")">#{iccid}</foreach>
+		</where>
+			and a.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	</select>
+	
+	<select id="getFlowcardList"
+		resultType="com.glsx.oms.fcadmin.biz.card.flowcard.model.BatchOpCardImport"
+		parameterType="java.util.List">
+		SELECT
+		a.iccidn iccidn,
+		a.iccid iccid,
+		a.status status,
+		a.op_id
+		FROM flowmgn_flowcard a
+		<where>
+			a.iccid in
+			<foreach collection="list" item="iccid" open="("
+				separator="," close=")">#{iccid}</foreach>
+		</where>
+		and a.op_id IN (SELECT op.op_id FROM flowmgn_op op WHERE op.owned =3)
+	</select>
+	
+	<update id="updateAuthName" 
+		parameterType="java.lang.String">
+		update flowmgn_flowcard set 
+				is_authname = 1,
+				update_time = now() 
+		 where imsi = #{imsi}
+	</update>
+</mapper>

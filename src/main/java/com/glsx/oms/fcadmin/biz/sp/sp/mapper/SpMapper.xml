@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.sp.sp.mapper.SpMapper">
+	<select id="selectByPageNumSize" resultType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp" 
+  	parameterType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+    SELECT
+		sp.sp_id spId,
+		sp.sp_code spCode,
+		sp.sp_name spName
+	FROM
+		flowmgn_sp sp
+	WHERE sp.sp_id != 1
+  </select>
+  
+  <select id="getSpList" resultType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+	  SELECT
+	  	sp.sp_id spId,
+		sp.sp_code spCode,
+		sp.sp_name spName,
+		sp.`level` level,
+		sp.contactperson contactperson,
+		sp.contactphone contactphone,
+		sp.comm_addr commAddr,
+		DATE_FORMAT(sp.registry_date,"%Y-%m-%d %H:%i:%s") registryDate,
+	
+		CASE WHEN sp.parent_id is NULL THEN "0"
+		ELSE temsp.sp_code
+		END
+		parentSpCode,
+	
+		CASE WHEN sp.parent_id is NULL THEN "0"
+		ELSE temsp.sp_name
+		END
+		parentSpName
+	  FROM
+		flowmgn_sp sp left join flowmgn_sp temsp
+		on sp.parent_id=temsp.sp_id
+		WHERE sp.STATUS = 1
+		ORDER BY sp.sp_code
+  </select>
+  
+  <select id="getUserdSpcardId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	SELECT
+		card_id
+	FROM
+		flowmgn_flowcard
+	WHERE
+		out_stock_time IS NOT NULL
+	AND sp_id = #{spId}
+  </select>
+  
+  <select id="getChildSp" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select sp.sp_id spId 
+  	from flowmgn_sp sp
+	where sp.parent_id = #{spId} and sp.STATUS = 1
+  </select>
+  
+  <update id="deleteSpById" parameterType="java.lang.Integer">
+  	update flowmgn_sp set status=0 where sp_id=#{spId}
+  </update>
+  
+  <select id="getSpdetail" parameterType="java.lang.Integer" resultType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+  	 SELECT
+	  	sp.sp_id spId,
+		sp.sp_code spCode,
+		sp.sp_name spName,
+		sp.`level` level,
+		sp.contactperson contactperson,
+		sp.contactphone contactphone,
+		sp.comm_addr commAddr 
+		from flowmgn_sp sp
+		where sp.sp_id = #{spId}
+  </select>
+  
+  <update id="updateSp" parameterType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+  	update flowmgn_sp set 
+  		contactperson=#{contactperson},
+  		contactphone=#{contactphone}, 
+  		comm_addr=#{commAddr}
+  	where sp_id = #{spId}
+  </update>
+  
+  <select id="existBySpName" parameterType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp" resultType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+  	select 
+  		sp.sp_id spId,
+		sp.sp_code spCode,
+		sp.sp_name spName
+	from flowmgn_sp sp
+	where sp.sp_name=#{spName} and sp.level=#{level} and sp.STATUS = 1
+  </select>
+  
+  <select id="getSpNameByLevel" parameterType="java.lang.Integer" resultType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+  	select sp.sp_id spId,sp.sp_code spCode,sp.sp_name spName
+  	from flowmgn_sp sp
+  	where sp.level=#{level} and sp.STATUS = 1
+  </select>
+  
+  <select id="getMaxSpCode" resultType="java.lang.Integer">
+  	select 
+	max(sp.sp_code) maxSpCode
+	from flowmgn_sp sp
+	where sp.sp_code not in('19180009','104334') and sp.sp_code between 100000 and 999999
+  </select>
+  
+  <insert id="saveSp" parameterType="com.glsx.oms.fcadmin.biz.sp.sp.model.Sp">
+  	insert into flowmgn_sp(sp_code,sp_name,level,contactperson,contactphone,comm_addr,accesskey,parent_id,status,last_operator_id,last_operator_name,registry_date,create_time,update_time)
+  	values(#{spCode},#{spName},#{level},#{contactperson},#{contactphone},#{commAddr},#{spCode},#{parentId},1,0,'',NOW(),NOW(),NOW())
+  </insert>
+</mapper>

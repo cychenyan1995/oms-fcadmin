@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="oms-fcadmin:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="oms-fcadmin-1.0.0.RELEASE.war">
+      <element id="artifact" artifact-name="oms-fcadmin:war exploded" />
+    </root>
+  </artifact>
+</component>

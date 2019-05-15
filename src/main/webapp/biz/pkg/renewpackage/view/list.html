@@ -1,0 +1,147 @@
+<div>
+
+	<!--  第一部分：菜单导航 start -->
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10">
+			<ol class="breadcrumb">
+				<li>套餐管理</li>
+				<li class="active"><strong>续费套餐管理</strong></li>
+			</ol>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!--  第一部分：菜单导航 end -->
+	
+
+	<!--  第二部分：列表部分 start -->
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="ibox relative">
+		
+			<!--  搜索部分 start -->
+			<div class="ibox-title clearfix">
+				<div class="row">
+					<div class="col-xs-8">
+					
+						<!--  关键字搜索部分 start -->
+						<form class="form-inline" role="form" ng-submit="flowPackageSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="flowPackageQuery.keyWork" placeholder="请输入套餐编号、名称" ng-disabled="advanceExpand"/>
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpands" ng-click="toggleClose();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" ng-disabled="advanceExpands" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpands}">高级搜索</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        
+                        <!--  高级搜索部分 start -->
+						<div class="advance" ng-show="advanceExpandShow" style="min-width: 432px;">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>高级搜索</h5>
+								</div>
+								<div class="ibox-content">
+									<form class="form-horizontal form-fixed form-fixed-6" name="advance_form" role="form" ng-submit="outOrderHighSearchForm();">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">套餐名称:</label>
+											<div class="control-content">
+												<ui-select ng-model="flowPackageQuery.packageId"
+													theme="bootstrap"> <ui-select-match
+													placeholder="全部">{{$select.selected.text}}</ui-select-match>
+												<ui-select-choices repeat="item in pkgServiceList">
+												<div ng-bind=" item.text "></div>
+												</ui-select-choices> </ui-select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">套餐状态:</label>
+											<div class="control-content">
+                                                <ui-select ng-model="flowPackageQuery.status" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in statusList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-2 control-label">流量类别:</label>
+											<div class="control-content">
+                                                <ui-select ng-model="flowPackageQuery.packageType" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in packageTypeList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-sm-2 control-label">运营商类型:</label>
+											<div class="control-content">
+                                                <ui-select ng-model="flowPackageQuery.owned" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in ownedList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+										</div>
+										<div class="form-group">
+                                            <label class="col-sm-2 control-label">分离计费:</label>
+                                            <div class="control-content">
+	                                             <ui-select ng-model="flowPackageQuery.isSeparateBill" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in isSeparateBillList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">服务商名称:</label>
+                                            <div class="control-content">
+                                                <ui-select ng-model="flowPackageQuery.spId" theme="bootstrap">
+						                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in serviceList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                            </div>
+                                        </div>
+                                        
+                                    </form>
+								</div>
+								
+								<div class="ibox-footer clearfix">
+									<button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+									<div class="pull-right">
+										<button type="button" class="btn btn-primary" ng-click="flowPackageHighSearchForm();">搜索</button>
+										<button type="button" class="btn btn-default" ng-click="toggleClose();">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  高级搜索部分 end -->
+					</div>
+				</div>
+			</div>
+			<!--  搜索部分 end -->
+			
+
+			<!--  表格部分 start -->
+			<div class="ibox-content">
+				<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+			</div>
+			<!--  表格部分 end -->
+			
+		</div>
+	</div>
+	<!--  第二部分：列表部分 end -->
+	
+</div>
+

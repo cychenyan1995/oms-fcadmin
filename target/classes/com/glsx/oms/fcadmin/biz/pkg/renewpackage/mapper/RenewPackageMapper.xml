@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.pkg.renewpackage.mapper.RenewPackageMapper">
+	<select id="getPackageList"
+		resultType="com.glsx.oms.fcadmin.biz.pkg.renewpackage.model.RenewPackage"
+		parameterType="java.lang.Integer">
+		SELECT
+		a.package_id packageId,
+		a.package_code packageCode,
+		a.package_name packageName,
+		a.sp_id spId
+		FROM flowmgn_sp_flowpackage a
+		WHERE package_type = #{type}
+	</select>
+	
+	<select id="selectByPageNumSize" resultType="com.glsx.oms.fcadmin.biz.pkg.renewpackage.model.RenewPackage" 
+  	parameterType="com.glsx.oms.fcadmin.biz.pkg.renewpackage.model.RenewPackage">
+    SELECT
+		package.package_id packageId,
+		package.package_code packageCode,
+		package.package_name packageName,
+		package.package_alias packageAlias,
+		package.package_type packageType,
+		package.package_price packagePrice,
+		package.is_separate_bill isSeparateBill,
+		sp.sp_code spCode,
+		sp.sp_name spName,
+		package.status status,
+		<!-- op.op_name opName, -->
+		package.owner owned,
+		package.autoactive_package_days autoactivePackageDays,
+		package.valid_cycle validCycle,
+		package.valid_cycle_unit validCycleUnit,
+		flow.flowserv_name flowservName,
+		flow.flowserv_type flowservType,
+		flow.total_flow totalFlow,
+		flow.flow_unit flowUnit,
+		flow.is_unlimit_flow isUnlimitFlow,
+		flow.is_month_clean isMonthClean,
+		flow.is_now_apply isNowApply,
+		flow.flowserv_pay_date flowservPayDate,
+		flow.charge_cycle chargeCycle,
+		flow.per_cycle_flow perCycleFlow,
+		
+		flow.over_flow_op overFlowOp,
+		access.en_name overFlowAccessName,
+		
+		package.create_time createTime,
+		package.update_time updateTime 
+	FROM
+		flowmgn_sp_flowpackage package
+		LEFT JOIN flowmgn_sp_flowpackage_list pl ON pl.package_id = package.package_id 
+		LEFT JOIN flowmgn_sp_flowservice flow ON flow.flowserv_id = pl.flowserv_id 
+		LEFT JOIN flowmgn_sp sp ON sp.sp_id = package.sp_id 
+		LEFT JOIN flowmgn_op_networkaccess access ON flow.over_flow_access_id = access.access_id 
+		<!-- LEFT JOIN flowmgn_op op ON op.op_id = package.op_id  -->
+	WHERE
+	 1=1 and package.package_type != 1 
+   <if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">  
+        and (package.package_code = '${keyWork}' or package.package_name = '${keyWork}')
+   </if>
+   
+   	<if test="packageType != null">  
+        and package.package_type = #{packageType} 
+    </if>
+    
+    <if test="packageId != null">  
+        and package.package_id =#{packageId} 
+    </if>
+    <if test="status != null">  
+        and package.status =#{status} 
+    </if>
+    <if test="owned != null">  
+        and package.owner =#{owned}
+    </if>
+   <if test="isSeparateBill != null">  
+        and package.is_separate_bill=#{isSeparateBill}
+   </if>
+   <if test="spId != null">  
+        and sp.sp_id =#{spId}  
+    </if>
+   ORDER BY package.create_time desc 
+  </select>
+  
+  <update id="changePackageStatus" parameterType="com.glsx.oms.fcadmin.biz.pkg.renewpackage.model.RenewPackage">
+  	 	update flowmgn_sp_flowpackage set status=#{status} ,update_time = NOW()  
+  	 	where package_id = #{packageId}
+  </update>
+  
+  	<insert id="saveFlowPackage" useGeneratedKeys="true" 
+	keyProperty="packageId" 
+	parameterType="com.glsx.oms.fcadmin.biz.pkg.renewpackage.model.RenewPackage">
+	   <selectKey keyProperty="packageCode" order="BEFORE"
+		  resultType="java.lang.Integer">
+		  SELECT max(package_code)+1 packageCode from flowmgn_sp_flowpackage where package_code LIKE '2%'
+		</selectKey>
+	
+		insert into flowmgn_sp_flowpackage
+		(sp_id,package_code,package_name, package_alias,package_type,package_price,
+		is_separate_bill,autoactive_package_days,owner,
+		valid_cycle,valid_cycle_unit,status,
+		create_time,update_time,last_operator_id,last_operator_name)
+		values
+		(#{spId},
+		<if test="packageCode == null">
+		   20000,
+		</if>
+		<if test="packageCode != null">
+		   #{packageCode},
+		</if>
+		
+		#{packageName},#{packageAlias},#{packageType},#{packagePrice},
+		#{isSeparateBill},#{autoactivePackageDays},#{owned},#{validCycle},#{validCycleUnit},1,
+		NOW(),NOW(),#{lastOperatorId},#{lastOperatorName})
+	</insert>
+	
+	<select id="getPackageIdByCode"
+		resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+		a.package_id packageId
+		FROM flowmgn_sp_flowpackage a
+		WHERE package_code = #{packageCode}
+	</select>
+</mapper>

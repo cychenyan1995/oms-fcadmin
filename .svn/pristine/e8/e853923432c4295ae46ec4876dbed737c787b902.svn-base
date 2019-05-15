@@ -1,0 +1,98 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">发货</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="tabs-container">
+		<form name="outerForm">
+			<uib-tabset> <uib-tab heading="发货成功"
+				select="onDelivery(0)">
+			<div class="panel-body">
+				<ng-form class="form-horizontal form-fixed form-fixed-6" name="delivery_form" role="form" novalidate
+					ng-submit="outOrderHighSearchForm();" method="post"
+					enctype="multipart/form-data">
+					<div class="form-group">
+						<label class="col-sm-2 control-label required" >快递单号:</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" name="expressNo" ng-required="true" maxlength="20"
+								ng-model="outOrderQuery.expressNo">
+							<div class="m-t-xs"
+							ng-show="delivery_form.expressNo.$invalid && delivery_form.submitted">
+							<small class="text-danger"
+								ng-show="delivery_form.expressNo.$error.required">请输入快递单号！</small>
+					</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label required">上传快递单据:</label>
+						<div class="col-lg-9 control-content">
+
+							<span nv-file-drop="" uploader="uploaderPhotos"
+								filters="queueLimit, customFilter"> <input
+								id='hiddenFileResume' type="file" nv-file-select=""
+								uploader="uploaderPhotos" ng-show="" multiple />
+								<button type="button" class="btn btn-primary btn-sm"
+									onclick="javascript: $('#hiddenFileResume').click();">上传图片</button>
+							</span>
+
+							<!-- <span nv-file-drop="" uploader="uploaderPhotos" >
+		                        <input id='hiddenFileResume' type="file" nv-file-select="" uploader="uploaderPhotos" ng-show="" multiple />
+		                        <button type="button" class="btn btn-primary btn-sm" onclick="javascript: $('#hiddenFileResume').click();">上传图片11</button>
+		                    </span> -->
+
+							<img ng-src="{{expressPic}}"
+								style="max-width: 400px; max-height: 300px; margin: 0 auto; display: block;" />
+							<input name="expressPic" class="form-control" type="hidden"
+								ng-required="true" ng-model="outOrderQuery.expressPic" />
+							<div class="m-t-xs"
+								ng-show="delivery_form.expressPic.$invalid && delivery_form.submitted">
+								<small class="text-danger"
+									ng-show="delivery_form.expressPic.$error.required">快递单据不能为空</small>
+							</div>
+						</div>
+					</div>
+				</ng-form>
+			</div>
+			</uib-tab> <uib-tab heading="发货失败" select="onDelivery(1)">
+			<div class="panel-body">
+				<ng-form class="form-horizontal form-fixed form-fixed-6"
+					name="fail_form" role="form"
+					ng-submit="outOrderHighSearchForm();">
+					<div class="form-group">
+						<label class="col-sm-2 control-label required">原因:</label>
+						<div class="col-sm-5">
+							<select id="frid" class="form-control" name="failReason" ng-required="true" theme="bootstrap"
+								ng-model="outOrderQuery.failReason" ng-change="frChange()">
+								<option value="">请选择</option>
+								<option value="1">缺货</option>
+								<option value="2">其他原因</option>
+							</select>
+							<div class="m-t-xs"
+								ng-show="fail_form.failReason.$invalid && fail_form.submitted">
+								<small class="text-danger"
+									ng-show="fail_form.failReason.$error.required">请选择发货失败原因！</small>
+							</div>
+						</div>
+						<div id="fdescId" style="display: none;">
+							<textarea class="form-control" rows="4" maxlength="200" 
+								ng-model="outOrderQuery.failReasonDesc" ng-required="false" check-length>
+									{{outOrderQuery.failReason}}
+								</textarea>
+						</div>
+					</div>
+				</ng-form>
+			</div>
+			</uib-tab> </uib-tabset>
+			</form>
+
+		</div>
+		<div class="modal-footer">
+			<button type="submit" class="btn btn-primary"
+				ng-click="submitOutOrder();">提交</button>
+			<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+		</div>
+	</div>

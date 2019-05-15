@@ -1,0 +1,53 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">导入卡</h4>
+        <button type="button" class="close" data-dismiss="modal" ng-click="cancel()">
+            <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>
+            请正确导入卡信息，下载导入模板:
+            <a href="" ng-click="downloadTemplate('1')">导入模板.xls</a>
+        </p>
+		<form role="form" method="post" enctype="multipart/form-data"
+			class="form-horizontal form-fixed form-fixed-4" novalidate
+			name="active_form">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">导入列表:</label>
+				<div class="col-sm-10">
+					<input type="file" file-model="myFile" upload-shell />
+				</div>
+			</div>
+			<div class="form-group" ng-show="loadShow">
+				<div class="sk-spinner sk-spinner-fading-circle">
+					<div class="sk-circle1 sk-circle"></div>
+					<div class="sk-circle2 sk-circle"></div>
+					<div class="sk-circle3 sk-circle"></div>
+					<div class="sk-circle4 sk-circle"></div>
+					<div class="sk-circle5 sk-circle"></div>
+					<div class="sk-circle6 sk-circle"></div>
+					<div class="sk-circle7 sk-circle"></div>
+					<div class="sk-circle8 sk-circle"></div>
+					<div class="sk-circle9 sk-circle"></div>
+					<div class="sk-circle10 sk-circle"></div>
+					<div class="sk-circle11 sk-circle"></div>
+					<div class="sk-circle12 sk-circle"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-7">
+					<div ng-show="importIsShow">
+						导入成功<span>{{successCount}}</span>条，失败 <b class="">{{failCount}}</b>条，请下载<a
+							href="javascript:void(0)" ng-click="downloadFile()">导出失败列表</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-click="importCard();">确认导入</button>
+        <button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+    </div>
+</div>

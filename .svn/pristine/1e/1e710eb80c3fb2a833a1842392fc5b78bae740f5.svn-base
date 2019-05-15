@@ -1,0 +1,225 @@
+/* common css */
+.relative {
+	position: relative;
+}
+
+.text-ellipsis {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.text-wrap {
+	word-wrap: break-word;
+}
+
+.table-layout {
+	table-layout: fixed;
+}
+
+/* overflow-y-visible */
+
+.ofy-visible {
+	overflow-y: visible !important;
+}
+.of-visible {
+	overflow: visible !important;
+}
+.w-250 {
+	min-width: 250px;
+}
+
+/* form required */
+.required:before {
+	position: absolute;
+	content: '*';
+	margin-top: 2px;
+	color: #a94442;
+	font-family: Courier New;
+	margin-left: -8px;
+}
+
+.control-label.required:before{
+  position: static;
+}
+
+.v-message {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	white-space: nowrap;
+}
+
+.form-fixed .form-group>.control-label {
+	float: left;
+}
+
+.form-fixed .control-content {
+	padding: 0 15px;
+	float: none;
+	width: auto;
+}
+
+.form-fixed .control-label {
+	padding-right: 0;
+}
+
+.form-fixed .control-content .control-label {
+	padding-left: 0;
+}
+
+.form-fixed-4 .form-group>.control-label {
+	width: 75px;
+}
+
+.form-fixed-4 .control-content {
+	margin-left: 75px;
+}
+
+.form-fixed-5 .form-group>.control-label {
+	width: 90px;
+}
+
+.form-fixed-5 .control-content {
+	margin-left: 90px;
+}
+
+.form-fixed-6 .form-group>.control-label {
+	width: 104px;
+}
+
+.form-fixed-6 .control-content {
+	margin-left: 104px;
+}
+
+.form-fixed-7 .form-group>.control-label {
+	width: 118px;
+}
+
+.form-fixed-7 .control-content {
+	margin-left: 118px;
+}
+
+.form-fixed-8 .form-group>.control-label {
+	width: 132px;
+}
+
+.form-fixed-8 .control-content {
+	margin-left: 132px;
+}
+
+.form-fixed-9 .form-group>.control-label {
+	width: 146px;
+}
+
+.form-fixed-9 .control-content {
+	margin-left: 146px;
+}
+
+/* top-title */
+.system-title {
+	display: inline-block;
+	margin: 14px 5px 5px 20px;
+}
+
+/* directive start */
+
+/* tree-select */
+.tree-select .jstree {
+	position: absolute;
+	background-color: #fff;
+	width: 100%;
+	max-height: 200px;
+	border: 1px solid #ddd;
+	overflow: auto;
+	z-index: 1000;
+}
+
+.tree-select .jstree .jstree-anchor {
+	width: 100%;
+}
+
+.tree-select .jstree .jstree-anchor.jstree-clicked {
+	color: #fff;
+}
+
+.tree-select .jstree-wholerow.jstree-wholerow-clicked {
+	background: #1ab394;
+	background: -moz-linear-gradient(top, #1ab394 0, #1ab394 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #1ab394),
+		color-stop(100%, #1ab394));
+	background: -webkit-linear-gradient(top, #1ab394 0, #1ab394 100%);
+	background: -o-linear-gradient(top, #1ab394 0, #1ab394 100%);
+	background: -ms-linear-gradient(top, #1ab394 0, #1ab394 100%);
+	background: linear-gradient(to bottom, #1ab394 0, #1ab394 100%);
+}
+
+/* dual-tablebox */
+.dual-tablebox .panel .panel-body {
+	min-height: 502px;
+	border: 1px solid #ddd;
+	margin-bottom: 15px;
+}
+
+.dual-tablebox .dataTables_wrapper {
+	padding-bottom: 0;
+}
+
+/* directive end */
+
+/* advance */
+.advance {
+	position: absolute;
+	left: 15px;
+	z-index: 10;
+	min-width: 698px;
+	margin-top: 8px;
+	margin-bottom: 25px;
+}
+
+.advance .ibox {
+	border: 1px solid #ddd;
+}
+
+.advance .form-group {
+	margin-bottom: 8px;
+}
+
+.advance .hr-line-dashed {
+	margin: 8px 0;
+}
+
+.advance .form-control {
+	height: 28px;
+	padding: 4px 12px;
+	font-size: 13px !important;
+}
+
+.advance  .ibox-content {
+	padding-bottom: 5px;
+}
+
+/* menu icons */
+
+.fa-img-nav {
+    vertical-align: middle;
+}
+
+.fa-img-nav:before {
+    content: "";
+    background: url("") no-repeat scroll right center transparent;
+    background-size: cover;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.fa-mobileCard:before {
+	background-image: url(../images/mobileCard.png);
+}
+
+.navbar-default .nav > li > a:hover .fa-mobileCard:before, 
+.navbar-default .nav > li > a:focus .fa-mobileCard:before,
+.nav > li.active > a .fa-mobileCard:before {
+	background-image: url(../images/mobileCard_active.png);
+}

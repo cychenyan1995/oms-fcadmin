@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.glsx.oms.fcadmin.biz.sp.flowservice.mapper.FlowServiceMapper">
+
+	<insert id="saveFlowService" useGeneratedKeys="true"
+		keyProperty="flowservId"
+		parameterType="com.glsx.oms.fcadmin.biz.sp.flowservice.model.FlowService">
+		insert into flowmgn_sp_flowservice
+		(flowserv_name,is_unlimit_flow,flowserv_type,
+		total_flow,per_cycle_flow,flow_unit,over_flow_access_id,
+		charge_cycle,charge_mode,is_month_clean,
+		is_now_apply,flowserv_pay_date,over_flow_op,
+		create_time,update_time,last_operator_id,last_operator_name)
+		values
+		(#{flowservName},#{isUnlimitFlow},#{flowservType},#{totalFlow},#{perCycleFlow},#{flowUnit},#{overFlowAccessId},
+		#{chargeCycle},#{chargeMode},#{isMonthClean},#{isNowApply},#{flowservPayDate},#{overFlowOp},
+		NOW(),NOW(),#{lastOperatorId},#{lastOperatorName})
+	</insert>
+
+</mapper>

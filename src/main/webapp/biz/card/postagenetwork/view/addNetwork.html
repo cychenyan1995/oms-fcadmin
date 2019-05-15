@@ -1,0 +1,125 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">创建通信计划</h4>
+		<button type="button" class="close" data-dismiss="modal"
+			ng-click="cancel()">
+			<span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<ng-form role="form" class="form-horizontal form-fixed form-fixed-6" novalidate name="frm">
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">通信计划ID:</label> 
+				<div class="control-content">
+                   <input type="text" class="form-control" ng-required="true" name="accessCode" ng-model="addNetwork.accessCode" ng-pattern="/^[1-9]\d*$/" v-async="asyncCallback(value)" maxlength=8>
+                   <div class="m-t-xs"
+						ng-show="frm.accessCode.$invalid && frm.submitted">
+						<small class="text-danger"
+							ng-show="frm.accessCode.$error.required">请输入通信计划ID！</small>
+						<small class="text-danger" 
+							ng-show="frm.accessCode.$error.vAsync">通信计划ID已存在！</small>
+						<small class="text-danger" 
+							ng-show="frm.accessCode.$error.pattern">通信计划ID为数字类型！</small>
+					</div>
+                </div>
+				
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label required">通信计划名称:</label> 
+				<div class="control-content">
+                   <input type="text" class="form-control" name="enName" ng-required="true" ng-model="addNetwork.enName" v-async="asyncEnName(value)" maxlength=100>
+                    <div class="m-t-xs"
+						ng-show="frm.enName.$invalid && frm.submitted">
+						<small class="text-danger"
+							ng-show="frm.enName.$error.required">请输入通信计划名称！</small>
+						<small class="text-danger" 
+							ng-show="frm.enName.$error.vAsync">通信计划名称已存在！</small>
+					</div>
+                </div>
+			</div>
+			<div class="form-group">
+                <label class="col-sm-2 control-label required">数据:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemData" name="itemData" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">语音被叫:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemVoiceCalled" name="itemVoiceCalled" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">短信:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemMsg" name="itemMsg" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">4G:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemFourG" name="itemFourG" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">黑名单:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemBlack" name="itemBlack" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">白名单:</label>
+                <div class="control-content">
+                    <ui-select ng-model="addNetwork.itemWhite" name="itemWhite" theme="bootstrap" >
+                        <ui-select-match placeholder="Y">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in YNlist">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+				<label class="col-lg-2 control-label required">APN:</label> 
+				<div class="control-content">
+                   <input type="text" class="form-control" name="itemApn" ng-required="true" ng-model="addNetwork.itemApn" maxlength=100>
+                   <div class="m-t-xs"
+						ng-show="frm.itemApn.$invalid && frm.submitted">
+						<small class="text-danger"
+							ng-show="frm.itemApn.$error.required">请输入通信计划APN！</small>
+					</div>
+                </div>
+			</div>
+		</ng-form>
+	</div>
+</div>
+	
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="submitAddnetwork();">提交</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

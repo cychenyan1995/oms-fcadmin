@@ -1,0 +1,122 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">新建回收</h4>
+	</div>
+	<div class="modal-body">
+		<form role="form" class="form-horizontal form-fixed form-fixed-4"
+			novalidate name="add_recycleRecord_form">
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">回收卡:</label>
+				<div class="col-lg-9 control-content">
+					<div class="row">
+						<div class="col-lg-3">
+							<ui-select ng-model="queryData.queryType" theme="bootstrap"> <ui-select-match
+								placeholder="请选择">{{$select.selected.text}}</ui-select-match> <ui-select-choices
+								repeat="item in queryTypeList">
+							<div ng-click="binding(item)" ng-bind=" item.text "></div>
+							</ui-select-choices> </ui-select>
+						</div>
+						<div class="col-lg-6">
+							<input name="queryValue" class="form-control" type="text"
+								v-onblur v-async="asyncCallback(value)" ng-required="true" ng-model="queryData.queryValue" />
+						</div>					
+						<div class="col-lg-3">
+							<button class="btn btn-primary" type="submit"
+								ng-click="queryRecycleCard()">查看卡信息</button>
+						</div>				   
+					</div>
+					<div class="m-t-xs" 
+						    ng-show="add_recycleRecord_form.queryValue.$invalid && add_recycleRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_recycleRecord_form.queryValue.$error.required">请填写卡信息</small> 
+						<small class="text-danger" 
+						    ng-show="add_recycleRecord_form.queryValue.$error.vAsync">卡信息不存在或卡套餐状态为库存，请重新输入</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group" ng-if="isShowCardInfo">
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="100">ICCID:</th>
+							<th width="100">{{recycleQuery.iccid}}</th>
+							<th width="100">IMSI</th>
+							<th width="100">{{recycleQuery.imsi}}</th>
+						</tr>
+						<tr>
+							<th width="100">网卡号:</th>
+							<th width="100">{{recycleQuery.cardNo}}</th>
+							<th width="100">运营商类型:</th>
+							<th width="100">{{recycleQuery.opName}}</th>
+						</tr>
+						<tr>
+							<th width="100">卡状态</th>
+							<th width="100"><font color="red">{{recycleQuery.cardStatus}}</font></th>
+							<th width="100">套餐状态</th>
+							<th width="100"><font color="red">{{recycleQuery.packageStatus}}</font></th>
+						</tr>
+						<tr>
+							<th width="100">总流量(MB):</th>
+							<th width="100">{{showTotalFlow(recycleQuery.isUnlimitFlow,recycleQuery.totalflow)}}</th>
+							<th width="100">剩余流量(MB)</th>
+							<th width="100">{{showRemainTotalflow(recycleQuery.isUnlimitFlow,recycleQuery.remainTotalflow)}}</th>
+						</tr>
+						<tr>
+							<th width="100">套餐开始时间:</th>
+							<th width="100">{{recycleQuery.packageBegintime}}</th>
+							<th width="100">套餐结束时间:</th>
+							<th width="100">{{recycleQuery.packageEndtime}}</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">回收原因</label>
+				<div class="col-lg-9 control-content">
+					<textarea ng-model="recycleRecord.recycleReason" ng-required="true"
+						name="recycleReason" class="form-control" maxlength="200"></textarea>
+				    <div class="m-t-xs" 
+						    ng-show="add_recycleRecord_form.recycleReason.$invalid && add_recycleRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_recycleRecord_form.recycleReason.$error.required">请填写回收原因</small> 
+			        </div>
+				</div>				
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">联系人</label>
+				<div class="col-lg-9 control-content">
+					<input name="contactorName" class="form-control" type="text"
+						ng-required="true" ng-model="recycleRecord.contactorName"
+						maxlength="20" />
+					<div class="m-t-xs" 
+						    ng-show="add_recycleRecord_form.contactorName.$invalid && add_recycleRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_recycleRecord_form.contactorName.$error.required">请填写联系人</small> 
+			        </div>
+				</div>
+				
+			</div>
+			<div class="form-group">
+				<label class="col-lg-3 control-label required">联系电话</label>
+				<div class="col-lg-9 control-content">
+					<input name="contactorTel" class="form-control" type="text"
+						ng-required="true" ng-model="recycleRecord.contactorTel"
+						ng-pattern="/^1[3|4|5|7|8][0-9]{9}$/" maxlength="11" />
+					<div class="m-t-xs" 
+						    ng-show="add_recycleRecord_form.contactorTel.$invalid && add_recycleRecord_form.submitted">
+						<small class="text-danger"
+							ng-show="add_recycleRecord_form.contactorTel.$error.required">请填写联系电话</small>
+						<small class="text-danger"
+							ng-show="add_recycleRecord_form.contactorTel.$error.pattern">请填写正确的手机号</small> 
+			        </div>
+				</div>
+				
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary"
+			ng-click="submitRecycle();">请求回收</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>

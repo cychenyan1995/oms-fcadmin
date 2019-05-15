@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.auth.nameauth.mapper.NameauthMapper">
+	<select id="selectByPageNumSize"
+		resultType="com.glsx.oms.fcadmin.biz.auth.nameauth.model.Nameauth"
+		parameterType="com.glsx.oms.fcadmin.biz.auth.nameauth.model.Nameauth">
+		SELECT
+		auth.nameauth_id nameauthId,
+		card.card_id cardId,
+		card.card_no cardNo,
+		card.iccid iccid,
+		card.imsi imsi,
+		op.owned owned,
+		op.op_id opId,
+		op.op_name opName,
+		auth.status status,
+		auth.fail_reason failReason,
+		auth.person_mobileno personMobileno,
+		auth.person_id personId,
+		auth.person_photo personPhoto,
+		auth.person_photo_pos personPhotoPos,
+		auth.person_photo_oop personPhotoOop,
+		auth.openid openId,
+		DATE_FORMAT(auth.create_time,'%Y-%m-%d %H:%i:%s') createDate,
+		DATE_FORMAT(auth.auth_time,'%Y-%m-%d %H:%i:%s') approveDate
+		FROM
+		flowmgn_flowcard_nameauth auth
+		LEFT JOIN flowmgn_flowcard card ON auth.card_id = card.card_id
+		LEFT JOIN flowmgn_op op ON card.op_id = op.op_id
+		WHERE 1 = 1 
+		<if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">
+			and (card.card_no = #{keyWork} or card.iccid = #{keyWork}
+			or card.imsi = #{keyWork})
+		</if>
+		<if test="iccid != null">
+			and card.iccid like '%${iccid}%'
+		</if>
+		<if test="imsi != null">
+			and card.imsi like '%${imsi}%'
+		</if>
+		<if test="cardNo != null">
+			and card.card_no like '%${cardNo}%'
+		</if>
+		<if test="status != null">
+			and auth.status=#{status}
+		</if>
+		<if test="owned != null">
+			and op.owned=#{owned}
+		</if>
+		<if test="opName != null">
+			and op.op_id=#{opName}
+		</if>
+			ORDER BY auth.create_time desc
+	</select>
+	
+	<update id="updateAuth" 
+		parameterType="com.glsx.oms.fcadmin.biz.auth.nameauth.model.Nameauth">
+		update flowmgn_flowcard_nameauth set 
+				status = #{status},
+				fail_reason = #{failReason},
+				auth_time = now(),
+				update_time = now() 
+		 where nameauth_id = #{nameauthId}
+	</update>
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.glsx.oms.fcadmin.biz.reneworder.mapper.RenewOrderMapper">
+
+	<select id="findList"
+		resultType="com.glsx.oms.fcadmin.biz.reneworder.model.RenewOrder"
+		parameterType="com.glsx.oms.fcadmin.biz.reneworder.model.RenewOrder">
+
+		select
+		      ro.order_no as orderNo,
+		      card.iccid as iccid,
+		      card.imsi as imsi,
+		      card.card_no as cardNo,
+		      card.status as cardStatus,
+		      ro.source as source,
+		      concat(sp.sp_code,'/',sp.sp_name) as merchantName,
+		      package.package_name as packageName,
+		      rod.pay_price as orderPrice,
+		      ro.status as payStatus,
+		      rod.status as openStatus,
+		      ro.third_order_no as payNo,
+			  DATE_FORMAT(ro.create_time,'%Y-%c-%d %H:%i:%s') as payTime
+		from flowmgn_recharge_order_detail rod 
+		INNER JOIN flowmgn_recharge_order ro on ro.order_id=rod.order_id
+		LEFT JOIN  flowmgn_sp_flowpackage package on ro.package_id=package.package_id
+		LEFT JOIN flowmgn_sp sp on rod.sp_id=sp.sp_id
+		LEFT JOIN flowmgn_flowcard card on rod.card_id=card.card_id
+		where 1=1 
+		
+		<if test="keyWork != null and keyWork != '' and keyWork != '已启用高级搜索'">
+			and (card.card_no ='${keyWork}' 
+			or card.iccid ='${keyWork}'
+			or card.imsi = '${keyWork}'
+			or ro.order_no = '${keyWork}'
+			or ro.third_order_no = '${keyWork}')
+		</if>
+		
+		<if test="orderNo != null">
+			and ro.order_no like '%${orderNo}%'
+		</if>
+		
+		<if test="payNo != null">
+			and ro.third_order_no like '%${payNo}%'
+		</if>
+		
+	    <if test="startTime != null and endTime != null">
+			and ro.create_time between #{startTime} and #{endTime}
+		</if>
+		
+		<if test="source != null">
+			and ro.source =#{source}
+		</if>
+		
+		<if test="iccid != null">
+			and card.iccid like '%${iccid}%'
+		</if>
+		
+		<if test="imsi != null">
+			and card.imsi like '%${imsi}%'
+		</if>
+	    
+	    <if test="cardNo != null">
+			and card.card_no like '%${cardNo}%'
+		</if>
+		
+		<if test="packageName != null">
+			and package.package_name =#{packageName}
+		</if>
+		
+		<if test="merchantName != null">
+		    and concat(sp.sp_code,'/',sp.sp_name) =#{merchantName}
+		</if>
+		
+		<if test="payStatus != null and payStatus == 0">
+		    and ro.status =#{payStatus}
+		</if>
+		
+		<if test="payStatus != null and payStatus == 1">
+		    and ((ro.status = 1 or ro.status = 2) and ro.source = 0) 
+		</if>
+		
+		<if test="payStatus != null and payStatus == 2">
+		    and ((ro.source = 1 or ro.source = 2) and (ro.status = 1 or ro.status = 2)) 
+		</if>
+		
+	    <if test="openStatus != null">
+		    and rod.status =#{openStatus}
+		</if>
+		
+		order by ro.create_time desc
+	</select>
+
+</mapper>

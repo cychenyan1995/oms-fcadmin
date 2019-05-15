@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glsx.oms.fcadmin.biz.download.task.mapper.TaskMapper">
+	<parameterMap type="com.glsx.oms.fcadmin.biz.download.task.model.Task" id="task"></parameterMap>
+	<resultMap type="com.glsx.oms.fcadmin.biz.download.task.model.Task" id="MP_task"></resultMap>
+	
+	<select id="findAll" resultMap="MP_task" parameterType="com.glsx.oms.fcadmin.biz.download.task.model.Task">
+		select task_id taskId,task_name taskName,task_type taskType,task_createtime taskCreatetime,file_download_url fileDownloadUrl,is_download  isDownload
+		from flowmgn_async_task 
+		where task_creator_id=#{taskCreatorId} and task_creator=#{taskCreator} and task_source=#{taskSource} and task_exec_status=1
+		<if test="taskName != null and taskName !=''">
+			and task_name like '%${taskName}%'
+		</if>
+		order by task_createtime desc
+	</select>
+	
+	<select id="findNotDownload" resultMap="MP_task" parameterType="com.glsx.oms.fcadmin.biz.download.task.model.Task">
+		select task_id taskId,task_name taskName,task_type taskType,task_createtime taskCreatetime,file_download_url fileDownloadUrl,is_download  isDownload
+		from flowmgn_async_task 
+		where task_creator_id=#{taskCreatorId} and task_creator=#{taskCreator} and task_source=#{taskSource} and is_download=0 and task_exec_status=1
+	</select>
+	
+	<update id="updateDownloadStatus" parameterType="com.glsx.oms.fcadmin.biz.download.task.model.Task">
+		update flowmgn_async_task set is_download = #{isDownload},task_updatetime = now() where task_id = #{taskId}
+	</update>
+</mapper>

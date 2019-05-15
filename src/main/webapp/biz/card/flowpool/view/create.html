@@ -1,0 +1,69 @@
+<div class="inmodal" style="higth: 1500px;">
+    <div class="modal-header">
+        <h4 class="modal-title">新建流量池</h4>
+        <button type="button" class="close" data-dismiss="modal" ng-click="cancel()">
+            <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal form-fixed form-fixed-5" novalidate name="create_from">
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">流量池名称:</label>
+                <div class="control-content">
+                    <input type="text" class="form-control" name="flowpoolName" ng-required="true" v-async="asyncCallback(value)" ng-model="flowPool.flowpoolName" maxlength="50" />
+                    <div class="m-t-xs" ng-show="create_from.flowpoolName.$invalid && create_from.submitted">
+                        <small class="text-danger" ng-show="create_from.flowpoolName.$error.required">请输入流量池名称！</small>
+                        <small class="text-danger" ng-show="create_from.flowpoolName.$error.vAsync">流量池名称已存在！</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label required">运营商名称:</label>
+                <div class="control-content">
+                    <ui-select ng-model="flowPool.opId" name="opId" theme="bootstrap" ng-required="true">
+                        <ui-select-match placeholder="请选择">{{$select.selected.text}}</ui-select-match>
+                        <ui-select-choices repeat="item in opList">
+                            <div ng-bind=" item.text "></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div class="m-t-xs" ng-show="create_from.opId.$invalid && create_from.submitted">
+                        <small class="text-danger" ng-show="create_from.opId.$error.required">请选择运营商！</small>
+                    </div>
+                </div>
+            </div>
+            <!-- {{list}} -->
+            <div class="form-group" ng-repeat="item in list">
+                <label class="col-sm-2 control-label required">资费计划{{listIndex[$index]}}:</label>
+                <div class="control-content">
+                    <div class="input-group">
+                        <ui-select ng-model="item.data" name="postageId{{$index}}" v-async="checkPostagePlan(value)" theme="bootstrap" ng-required="true">
+                            <ui-select-match placeholder="请选择">{{$select.selected.text}}</ui-select-match>
+                            <ui-select-choices repeat="item in postagePlanList">
+                                <div ng-bind=" item.text "></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="input-group-addon" role="button">
+							<i ng-if="$index === 0" class="fa fa-plus-square-o" ng-click="addInput($index)"></i>
+							<i ng-if="$index !== 0" class="fa fa-minus-square-o" ng-click="delInput($index)"></i>
+						</span>
+                    </div>
+                    <div class="m-t-xs" ng-show="create_from['postageId' + $index].$invalid && create_from.submitted">
+                        <small class="text-danger" ng-show="create_from['postageId' + $index].$error.required">请选择资费计划！</small>
+                        <small class="text-danger" ng-show="create_from['postageId' + $index].$error.vAsync">该资费计划已使用，请重新选择！</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label ">备注:</label>
+                <div class="control-content">
+                    <textarea type="text" class="form-control" maxlength="200" ng-model="flowPool.remark">
+                    </textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-click="submitFlowPool();">提交</button>
+        <button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+    </div>
+</div>

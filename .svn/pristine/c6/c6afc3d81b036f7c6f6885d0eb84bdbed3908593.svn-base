@@ -1,0 +1,294 @@
+<div>
+
+	<!--  第一部分：菜单导航 start -->
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10">
+			<ol class="breadcrumb">
+				<li>联通卡</li>
+				<li class="active"><strong>联通卡片管理</strong></li>
+			</ol>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!--  第一部分：菜单导航 end -->
+	
+
+	<!--  第二部分：列表部分 start -->
+	<div class="row wrapper wrapper-content animated fadeInRight advance-wrapper">
+		<div class="ibox relative">
+		
+			<!--  搜索部分 start -->
+			<div class="ibox-title clearfix">
+				<div class="row">
+					<div class="col-xs-8">
+					
+						<!--  关键字搜索部分 start -->
+						<form class="form-inline" role="form" ng-submit="flowCardSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" ng-model="flowCardQuery.queryText" placeholder="输入网卡号、ICCID、IMSI、IMEI" ng-disabled="advanceExpand"/>
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpands" ng-click="toggleClose();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" ng-disabled="advanceExpands" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpands}">高级搜索</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        	
+                        <!--  高级搜索部分 start -->
+						<div class="advance" ng-show="advanceExpandShow">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>高级搜索</h5>
+								</div>
+								<div class="ibox-content">
+                                    <form class="form-horizontal form-fixed form-fixed-6" name="advance_form" role="form">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">ICCID:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.iccid">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">IMSI:</label>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.imsi">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">网卡号:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.cardNo">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">IMEI:</label>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.imei">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">实名认证:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="flowCardQuery.isAuthname" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in authNameList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">卡状态异常原因:</label>
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="flowCardQuery.statusChangeReason" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in reasonList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">流量池名称:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="flowCardQuery.poolId" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in poolList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">服务商名称:</label>
+                                                    <div class="col-sm-5">
+                                                       <ui-select ng-model="flowCardQuery.spId" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in serviceList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">卡状态:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="flowCardQuery.status" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in statusList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">套餐状态:</label>
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="flowCardQuery.packageStatus" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in packageStatusList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">卡激活时间:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="activeTime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.activeTime" />
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">运营商发货时间:</label>
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="deliveryTime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.deliveryTime" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">套餐开始时间:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="packageBegintime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.packageBegintime" />
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">套餐结束时间:</label>
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="packageEndtime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.packageEndtime" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">导入时间:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="inStockTime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.inStockTime" />
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">出库时间:</label>
+                                                    <div class="col-sm-5">
+                                                        <input date-range-picker name="outStockTime"
+															class="form-control date-picker" type="text"
+															ng-model="flowCardQuery.outStockTime" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">当月消耗:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.curUsedSmall">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">到</span>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.curUsedBig">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">总流量:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.totalSmall">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">到</span>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.totalBig">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">总消耗:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.usedSmall">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">到</span>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.usedBig">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">总剩余:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.remainSmall">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">到</span>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="flowCardQuery.remainBig">
+                                                    </div>
+                                                    <span class="form-control-static pull-left">M</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+								<div class="ibox-footer clearfix">
+									<button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+									<div class="pull-right">
+										<button type="button" class="btn btn-primary" ng-click="flowCardHighSearchForm();">搜索</button>
+										<button type="button" class="btn btn-default" ng-click="toggleClose();">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  高级搜索部分 end -->
+					</div>
+				</div>
+			</div>
+			<!--  搜索部分 end -->
+			
+
+			<!--  表格部分 start -->
+			<div class="ibox-content">
+				<div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns"/>
+			</div>
+			<!--  表格部分 end -->
+			
+		</div>
+	</div>
+	<!--  第二部分：列表部分 end -->
+	
+</div>
+

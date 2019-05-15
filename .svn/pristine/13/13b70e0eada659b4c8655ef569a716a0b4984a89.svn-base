@@ -1,0 +1,201 @@
+<div>
+    <!--  第一部分：菜单导航 start -->
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <ol class="breadcrumb">
+                <li>移动卡</li>
+                <li class="active"><strong>待开卡管理</strong></li>
+            </ol>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <!--  第一部分：菜单导航 end -->
+    <!--  第二部分：列表部分 start -->
+    <div class="row wrapper wrapper-content animated fadeInRight advance-wrapper">
+        <div class="ibox relative">
+            <!--  搜索部分 start -->
+            <div class="ibox-title clearfix">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <!--  关键字搜索部分 start -->
+                        <form class="form-inline" role="form" ng-submit="openCardSearchForm();">
+                            <div class="input-group">
+                                <input type="text" class="form-control w-250" style="min-width: 345px;" ng-model="openCardQuery.keyWork" placeholder="输入网卡号、ICCID、IMSI" ng-disabled="advanceExpand" />
+                                <span class="input-group-addon glyphicon glyphicon-remove" ng-show="advanceExpands" ng-click="toggleClose();" aria-hidden="true"></span>
+                            </div>
+                            <div class="input-group">
+                                <button class="btn btn-primary" ng-disabled="advanceExpands" type="submit">搜索</button>
+                            </div>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" ng-click="toggleAdvance();" ng-class="{active:advanceExpands}">高级搜索</button>
+                            </div>
+                        </form>
+                        <!--  关键字搜索部分 end -->
+                        <!--  高级搜索部分 start -->
+               			<div class="advance" ng-show="advanceExpandShow">
+							<div class="ibox">
+								<div class="ibox-title">
+									<h5>高级搜索</h5>
+								</div>
+								<div class="ibox-content">
+									<form class="form-horizontal form-fixed form-fixed-6" name="advance_form" role="form">
+										<div class="form-group">
+                                            <label class="col-sm-2 control-label">ICCID:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="openCardQuery.ICCID">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">IMSI:</label>
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="openCardQuery.IMSI">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">网卡号:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text" class="form-control" ng-model="openCardQuery.cardNo">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">服务商名称:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="openCardQuery.spName" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in spNameList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">开卡套餐:</label>
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="openCardQuery.packageName" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in pkNameList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">卡类型:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="openCardQuery.cardType" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in cardTypeList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">卡状态:</label>
+                                                    <div class="col-sm-5">
+                                                        <ui-select ng-model="openCardQuery.cardStatus" theme="bootstrap">
+								                            <ui-select-match placeholder="全部">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in cardStatusList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">激活宽限期:</label>
+                                            <div class="control-content">
+                                                <div class="row">
+                                                	 <div class="col-sm-5">
+                                                        <ui-select ng-model="openCardQuery.activeDaysEqual" ng-change="changeEquals()" theme="bootstrap">
+								                            <ui-select-match placeholder="介于之间">{{$select.selected.text}}</ui-select-match>
+								                            <ui-select-choices repeat="item in activeDaysEqualList">
+								                                <div ng-bind=" item.text "></div>
+								                            </ui-select-choices>
+								                        </ui-select>
+                                                    </div>
+                                                    
+                                                    <div ng-show="Between">
+	                                                   <div class="col-sm-3">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.activeDaysBetweenSmall">
+	                                                   </div>
+	                                                   <span class="form-control-static pull-left">到</span>
+	                                                   <div class="col-sm-3">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.activeDaysBetweenBig">
+	                                                   </div>
+                                                    </div>
+                                                    
+                                                    <div ng-show="NotBetween">
+	                                                   <div class="col-sm-4">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.autoactivePackageDays">
+	                                                   </div>
+                                                   </div>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label class="col-sm-2 control-label">激活宽限剩余天数:</label>
+                                          <div class="control-content">
+                                              <div class="row">
+                                              	 <div class="col-sm-5">
+                                                      <ui-select ng-model="openCardQuery.activeRestDaysEqual" ng-change="changeRestEquals()" theme="bootstrap">
+						                            <ui-select-match placeholder="介于之间">{{$select.selected.text}}</ui-select-match>
+						                            <ui-select-choices repeat="item in activeRestDaysEqualList">
+						                                <div ng-bind=" item.text "></div>
+						                            </ui-select-choices>
+						                        </ui-select>
+                                                  </div>
+                                                 <div ng-show="RestBetween">
+	                                                   <div class="col-sm-3">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.activeRestDaysBetweenSmall">
+	                                                   </div>
+	                                                   <span class="form-control-static pull-left">到</span>
+	                                                   <div class="col-sm-3">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.activeRestDaysBetweenBig">
+	                                                   </div>
+                                                    </div>
+                                                    
+                                                    <div ng-show="RestNotBetween">
+	                                                   <div class="col-sm-4">
+	                                                       <input type="text" class="form-control" ng-model="openCardQuery.activePackageRestDays">
+	                                                   </div>
+                                                   </div>
+                                              </div>
+                                          </div>
+                                      </div>
+									</form>
+								</div>
+								<div class="ibox-footer clearfix">
+									<button type="button" class="btn btn-default pull-left" ng-click="resetForm();">清空</button>
+									<div class="pull-right">
+										<button type="button" class="btn btn-primary" ng-click="openCardHighSearchForm();">搜索</button>
+										<button type="button" class="btn btn-default" ng-click="toggleClose();">取消</button>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <!--  高级搜索部分 end -->
+                    </div>
+                </div>
+            </div>
+            <!--  搜索部分 end -->
+            <!--  表格部分 start -->
+            <div class="ibox-content">
+                <div process-datatable dt-options="dtOptions" dt-instance="dtInstance" dt-columns="dtColumns" />
+            </div>
+            <!--  表格部分 end -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="inmodal">
+	<div class="modal-header">
+		<h4 class="modal-title">续费操作</h4>
+		<button type="button" class="close" data-dismiss="modal" ng-click="cancel()">
+            <span aria-hidden="true">×</span> <span class="sr-only">Close</span>
+        </button>
+	</div>
+	<div class="modal-body">
+		<form role="form" class="form-horizontal form-fixed form-fixed-7" novalidate
+			name="renew_form">
+			<div class="form-group">
+				<label class="col-sm-4 control-label text-danger required">请选择续费套餐:</label>
+                 <div class="col-sm-3">
+							<select class="form-control" ng-required="true" ng-model="flowCardRenew.packageType" ng-change="getPackage()">
+								<option value="">请选择</option>
+								<option value="2">流量套餐</option>
+								<option value="3">流量包</option>
+							</select>
+                 </div>
+                 <div class="col-sm-5">
+							<ui-select ng-model="flowCardRenew.packageName" ng-required="true" theme="bootstrap" ng-change="showPackage()">
+	                           <ui-select-match placeholder="请选择">{{$select.selected.text}}</ui-select-match>
+	                           <ui-select-choices repeat="item in packageList">
+	                               <div ng-bind=" item.text "></div>
+	                           </ui-select-choices>
+	                       </ui-select>
+                 </div>
+             </div>
+			<div class="form-group">
+				<label class="col-sm-4 text-danger required">请确认选中的流量卡:</label>
+			</div>
+			<div class="form-group">
+						<table class="table table-striped table-bordered table-hover">
+							<tbody>
+								<tr>
+									<td>ICCID:</td>
+									<td>{{flowcardData.iccid}}</td>
+									<td>IMSI:</td>
+									<td>{{flowcardData.imsi}}</td>
+								</tr>
+								<tr>
+									<td>当前套餐:</td>
+									<td>{{flowcardData.curPackage}}</td>
+									<td>续费套餐:</td>
+									<td>{{flowcardData.renewPackage}}</td>
+								</tr>
+							</tbody>
+						</table>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-primary" ng-click="renewCard();">确认续费</button>
+		<button type="button" class="btn btn-white" ng-click="cancel();">取消</button>
+	</div>
+</div>
